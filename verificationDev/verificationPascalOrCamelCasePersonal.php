@@ -85,3 +85,7 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo "Total of files and folders scanned: \033[32m$fileCount\033[0m\n";
 echo "Execution time : \033[32m$executionTime secondes\033[0m\n";
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+
+/**
+ *  https://github.com/SkaikruNashoba
+ */

@@ -87,3 +87,7 @@ if ($filesMoreThanXLinesCount === 0) {
 }
 echo "Execution time : \033[32m$executionTime secondes\033[0m\n";
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+
+/**
+ *  https://github.com/SkaikruNashoba
+ */

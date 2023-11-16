@@ -58,3 +58,7 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo "Total files: \033[32m$fileCount\033[0m\n";
 echo "Execution time: \033[32m$executionTime\033[0m seconds\n";
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+
+/**
+ *  https://github.com/SkaikruNashoba
+ */

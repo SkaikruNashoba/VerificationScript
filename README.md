@@ -1,6 +1,6 @@
 # VerificationScript
 
-This script is used to verify the naming conventions in your project. It can check for both Pascal and Camel case naming conventions.
+This repository is used to create scripts verifying projects according to user requirements
 
 ## How to use the script:
 
@@ -20,3 +20,7 @@ Please ensure that you have PHP installed and configured on your machine to run 
 ## Developer
 
 Hello Developer, if you're planning to create a new script, please write it in English and adhere to the Lower Camel Case (LCC) naming convention. You can refer to `Base.php` for guidance.
+
+Please indicate your github in a comment at the bottom of each file you create.
+
+Please do not touch the file already present without the agreement of the file creator.
