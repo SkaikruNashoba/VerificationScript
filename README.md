@@ -15,3 +15,7 @@ This script is used to verify the naming conventions in your project. It can che
 - Replace `[option]` with `-onlyFile` if you only want to show files, or `-onlyDir` if you only want to show directories.
 
 Please ensure that you have PHP installed and configured on your machine to run these scripts.
+
+## Developer
+
+Hello Developer, if you're planning to create a new script, please write it in English and adhere to the Lower Camel Case (LCC) naming convention. You can refer to `Base.php` for guidance.
