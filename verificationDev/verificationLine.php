@@ -70,8 +70,8 @@ function exploreDirectory($directoryPath, $numLines, $command, &$fileCount, &$fi
 
 $startTime = microtime(true);
 $directoryPath = $argv[1];
-$numLines = $argv[2];
-$command = $argv[3];
+$command = $argv[2];
+$numLines = $argv[3];
 $fileCount = 0;
 $filesMoreThanXLinesCount = 0;
 exploreDirectory($directoryPath, $numLines, $command, $fileCount, $filesMoreThanXLinesCount);

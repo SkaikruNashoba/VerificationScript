@@ -7,13 +7,16 @@ This repository is used to create scripts verifying projects according to user r
 ### verificationLine.php
 - Run the command `php verificationLine.php [your_folder] [option] [option]` in your terminal.
 - Replace `[your_folder]` with the path to the folder you want to verify.
-- Replace `[option]` with `-noExplain` if you do not want the script to explain how it navigates through folders/subfolders/files.
+- Replace `[option]` with `-noExplain` if you do not want the script to explain how it navigates through folders/subfolders/files. (if you want the explanation, just write "`-`" for [option])
 - Replace the second [option] with a number to select the number of lines that a file must not exceed
 
 ### verificationPascalOrCamelPersonal.php
-- Run the command `php verificationPascalOrCamelPersonal.php [your_folder] [option]` in your terminal.
+- Run the command `php verificationPascalOrCamelPersonal.php [your_folder] [option] [option]` in your terminal.
 - Replace `[your_folder]` with the path to the folder you want to verify.
-- Replace `[option]` with `-onlyFile` if you only want to show files, or `-onlyDir` if you only want to show directories.
+- Replace `[option]` with `-noExplain` if you do not want the script to explain
+- Replace the second `[option]` with `-onlyFile` if you only want to show files, or `-onlyDir` if you only want to show directories.
+
+if you don't want [option], write a "`-`" instead of [option]
 
 Please ensure that you have PHP installed and configured on your machine to run these scripts.
 
