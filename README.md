@@ -5,9 +5,10 @@ This script is used to verify the naming conventions in your project. It can che
 ## How to use the script:
 
 ### verificationLine.php
-- Run the command `php verificationLine.php [your_folder] [option]` in your terminal.
+- Run the command `php verificationLine.php [your_folder] [option] [option]` in your terminal.
 - Replace `[your_folder]` with the path to the folder you want to verify.
 - Replace `[option]` with `-noExplain` if you do not want the script to explain how it navigates through folders/subfolders/files.
+- Replace the second [option] with a number to select the number of lines that a file must not exceed
 
 ### verificationPascalOrCamelPersonal.php
 - Run the command `php verificationPascalOrCamelPersonal.php [your_folder] [option]` in your terminal.
