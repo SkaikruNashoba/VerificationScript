@@ -30,55 +30,46 @@ function exploreDirectory($directoryPath, $argTwo, $argThree, &$fileCount, &$lin
 						$newContents = '';
 						$lineNumber = 1;
 						$lineError = 0;
-						if ($argThree === "-withoutExplain") {
-							$listOfLine = [];
-							foreach ($fileContents as $line) {
-								$trimmedLine = rtrim($line);
-								if (
-									in_array(substr($trimmedLine, -1), ['}', ')', '\'', '"'])
-									&& substr($trimmedLine, -2) !== '}}'
-									&& !preg_match("/\{[\w]+\}*/", $trimmedLine)
-									&& !preg_match("/return(?! \()/", $trimmedLine)
-								) {
-									$listOfLine[] = $lineNumber;
-									$lineError++;
-								}
-								$lineNumber++;
+						$listOfLine = [];
+						foreach ($fileContents as $line) {
+							if ($argThree !== "-withoutExplain") {
+								echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+								echo "\033[32mActual line\033[0m : " . ($lineNumber) . "\n";
+								echo "\033[32mActual file\033[0m : $filePath\n";
 							}
+							$trimmedLine = rtrim($line);
+							if (
+								in_array(substr($trimmedLine, -1), ['}', ')', '\'', '"'])
+								&& substr($trimmedLine, -2) !== '}}'
+								&& !preg_match("/\{[\w]+\}*/", $trimmedLine)
+								&& !preg_match("/return(?! \()/", $trimmedLine)
+							) {
+								if (isset($argTwo) && $argTwo === '-noEdit') {
+									echo "\033[31mPotential missing a selemicon at this line (line " . ($lineNumber - 1) . ")\033[0m\n";
+									$lineError++;
+									$listOfLine[] = $lineNumber - 1;
+								} else {
+									$trimmedLine .= ';';
+									echo "Modified line $lineNumber of file $filePath\n";
+									$lineError++;
+									$listOfLine[] = $lineNumber - 1;
+								}
+							}
+							$lineNumber++;
+							$newContents .= $trimmedLine . PHP_EOL;
+						}
+						if ($argThree === "-withoutExplain") {
 							echo "Lines affected:\n[ ";
 							foreach ($listOfLine as $line) {
 								echo " \033[31m$line\033[0m,";
 							}
 							echo " ]\n";
 						} else {
-							foreach ($fileContents as $line) {
-								echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
-								echo "\033[32mActual line\033[0m : " . ($lineNumber) . "\n";
-								echo "\033[32mActual file\033[0m : $filePath\n";
-								$trimmedLine = rtrim($line);
-								if (
-									in_array(substr($trimmedLine, -1), ['}', ')', '\'', '"'])
-									&& substr($trimmedLine, -2) !== '}}'
-									&& !preg_match("/\{[\w]+\}*/", $trimmedLine)
-									&& !preg_match("/return(?! \()/", $trimmedLine)
-								) {
-									if (isset($argTwo) && $argTwo === '-noEdit') {
-										echo "\033[31mPotential missing a selemicon at this line (line " . ($lineNumber - 1) . ")\033[0m\n";
-										$lineError++;
-									} else {
-										$trimmedLine .= ';';
-										echo "Modified line $lineNumber of file $filePath\n";
-										$lineError++;
-									}
-								}
-								echo "\033[32mActual line content\033[0m : $line\n";
-								$newContents .= $trimmedLine . PHP_EOL;
-								$lineNumber++;
-								echo "\033[33mNext line...\033[0m\n";
-								echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
-							}
-							file_put_contents($filePath, $newContents);
+							echo "\033[32mActual line content\033[0m : $line\n";
+							echo "\033[33mNext line...\033[0m\n";
+							echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 						}
+						file_put_contents($filePath, $newContents);
 					} else {
 						echo "\033[31mFile $filePath is not a js or php file.\033[0m\n";
 					}
@@ -113,9 +104,6 @@ echo "Execution time: \033[32m$executionTime\033[0m seconds\n";
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 
 /**
- * 	Creator :
+ * 	Creator
  *  https://github.com/SkaikruNashoba
- * 
- * 	Helper :
- * 	https://github.com/Baptiste-R-epi
  */
