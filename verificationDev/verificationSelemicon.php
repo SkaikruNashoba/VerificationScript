@@ -64,11 +64,12 @@ function exploreDirectory($directoryPath, $argTwo, $argThree, &$fileCount, &$lin
 							}
 						}
 						if (isset($argThree) && $argThree === "-withoutExplain") {
-							echo "Lines affected:\n[ ";
+							echo "\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m";
+							echo "\nLines affected:\n[ ";
 							foreach ($listOfLine as $line) {
 								echo " \033[31m$line\033[0m,";
 							}
-							echo " ]\n";
+							echo " ]";
 						}
 						file_put_contents($filePath, $newContents);
 					} else {
@@ -98,11 +99,11 @@ exploreDirectory($directoryPath, $argTwo, $argThree, $fileCount, $lineError);
 $endTime = microtime(true);
 $executionTime = round($endTime - $startTime, 2);
 
-echo "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+echo "\n\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 echo "Total files rewrite: \033[32m$fileCount\033[0m\n";
 echo ($lineError === 0) ? ("Total lines where a selemicon was missing: \033[32m$lineError\033[0m\n") : ("Total lines where a selemicon was missing: \033[31m$lineError\033[0m\n");
 echo "Execution time: \033[32m$executionTime\033[0m seconds\n";
-echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 
 /**
  * 	Creator
