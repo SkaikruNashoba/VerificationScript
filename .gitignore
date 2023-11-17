@@ -1,0 +1,4 @@
+*
+!verificationDev/
+!verificationDev/*
+!.gitignore

@@ -76,7 +76,7 @@ $fileCount = 0;
 $filesMoreThanXLinesCount = 0;
 exploreDirectory($directoryPath, $numLines, $command, $fileCount, $filesMoreThanXLinesCount);
 $endTime = microtime(true);
-$executionTime = $endTime - $startTime;
+$executionTime = round($endTime - $startTime, 2);
 
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 echo "Total of files scanned: \033[32m$fileCount\033[0m\n";
@@ -89,5 +89,6 @@ echo "Execution time : \033[32m$executionTime secondes\033[0m\n";
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 
 /**
+ *  Creator :
  *  https://github.com/SkaikruNashoba
  */
