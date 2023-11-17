@@ -16,8 +16,13 @@ This repository is used to create scripts verifying projects according to user r
 - Replace `[option]` with `-noExplain` if you do not want the script to explain
 - Replace the second `[option]` with `-onlyFile` if you only want to show files, or `-onlyDir` if you only want to show directories.
 
-if you don't want [option], write a "`-`" instead of [option]
+### verificationSelemicon.php
+- Run the command `php verificationSelemicon.php [your_folder] [option]` in your terminal.
+- Replace `[your_folder]` with the path to the folder you want to verify.
+- Replace `[option]` with `-noExplain` if you do not want the script to explain how it navigates through folders/subfolders/files.
+- Replace the second `[option]` with `-withoutExplain` if you don't want explication and you want only number of line affected
 
+if you don't want [option], write a "`-`" instead of [option]
 Please ensure that you have PHP installed and configured on your machine to run these scripts.
 
 ## Developer
