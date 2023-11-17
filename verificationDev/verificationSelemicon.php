@@ -57,17 +57,18 @@ function exploreDirectory($directoryPath, $argTwo, $argThree, &$fileCount, &$lin
 							}
 							$lineNumber++;
 							$newContents .= $trimmedLine . PHP_EOL;
+							if (isset($argThree) && $argThree !== "-withoutExplain") {
+								echo "\033[32mActual line content\033[0m : $line";
+								echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+								echo "\033[33mNext line...\033[0m\n\n";
+							}
 						}
-						if ($argThree === "-withoutExplain") {
+						if (isset($argThree) && $argThree === "-withoutExplain") {
 							echo "Lines affected:\n[ ";
 							foreach ($listOfLine as $line) {
 								echo " \033[31m$line\033[0m,";
 							}
 							echo " ]\n";
-						} else {
-							echo "\033[32mActual line content\033[0m : $line\n";
-							echo "\033[33mNext line...\033[0m\n";
-							echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 						}
 						file_put_contents($filePath, $newContents);
 					} else {
