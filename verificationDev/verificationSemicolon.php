@@ -12,7 +12,7 @@ $argTwo = $argv[2];
 $argThree = $argv[3];
 $directoryPath = $argv[1];
 
-echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+
 function exploreDirectory($directoryPath, &$argTwo, &$argThree, $parentPath = '') {
 	if (!isset($directoryPath)) {
 		echo "\033[31mPlease indicate the path of the folder to analyze.\033[0m\n";
@@ -97,8 +97,8 @@ $executionTime = round($endTime - $startTime, 2);
 echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 if (isset($argTwo) && $argTwo !== '-noEdit') {
 	echo "\n\033[31mPlease check all modified files in case of a potential error during replacement\033[0m\n\n";
-	echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 }
+echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 /**
  * 	Creator
  *  https://github.com/SkaikruNashoba
