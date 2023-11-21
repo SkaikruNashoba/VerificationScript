@@ -5,20 +5,20 @@ This repository is used to create scripts verifying projects according to user r
 ## How to use the script:
 
 ### verificationLine.php
-- Run the command `php verificationLine.php [your_folder] [option] [option]` in your terminal.
-- Replace `[your_folder]` with the path to the folder you want to verify.
+- Run the command `php verificationLine.php [path] [option] [option]` in your terminal.
+- Replace `[path]` with the path you want to verify.
 - Replace `[option]` with `-noExplain` if you do not want the script to explain how it navigates through folders/subfolders/files. (if you want the explanation, just write "`-`" for [option])
 - Replace the second [option] with a number to select the number of lines that a file must not exceed
 
 ### verificationPascalOrCamelPersonal.php
-- Run the command `php verificationPascalOrCamelPersonal.php [your_folder] [option] [option]` in your terminal.
-- Replace `[your_folder]` with the path to the folder you want to verify.
+- Run the command `php verificationPascalOrCamelPersonal.php [path] [option] [option]` in your terminal.
+- Replace `[path]` with the path you want to verify.
 - Replace `[option]` with `-noExplain` if you do not want the script to explain
 - Replace the second `[option]` with `-onlyFile` if you only want to show files, or `-onlyDir` if you only want to show directories.
 
 ### verificationSelemicon.php
-- Run the command `php verificationSelemicon.php [your_folder] [option] [option]` in your terminal.
-- Replace `[your_folder]` with the path to the folder you want to verify.
+- Run the command `php verificationSelemicon.php [path] [option] [option]` in your terminal.
+- Replace `[path]` with the path you want to verify.
 - Replace `[option]` with `-noEdit` if you do not want the script rewrite the file.
 - Replace the second `[option]` with `-withoutExplain` if you don't want explication and you want only number of line affected
 

@@ -3,51 +3,47 @@
 /**
  * The exploreDirectory function is the base of this script. It recursively explores a directory and performs a command on each file.
  * 
- * @param string $directoryPath The path of the directory to explore.
- * @param string $command The command to perform on each file.
- * @param int $fileCount A reference to the total file count.
- * @param string $parentPath The relative path of the parent directory (used for recursion).
+ * @param string $path The path of the folder or file to analyze.
+ * @param string $argTwo The second argument of the command.
+ * @param string $argThree The third argument of the command.
+ * 
+ * @return string The result of the command.
  */
-function exploreDirectory($directoryPath, $command, &$fileCount, $parentPath = '') {
-	if (!isset($directoryPath)) {
-		echo "\033[31mPlease indicate the path of the folder to analyze.\033[0m\n";
+function explorePath($path, &$argTwo, &$argThree) {
+
+	if (!isset($path)) {
+		echo "\033[31mPlease indicate the path of the folder or file to analyze.\033[0m\n";
 		echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 		exit;
 	}
-	$directory = opendir($directoryPath);
 
-	if ($directory) {
-		while (($file = readdir($directory)) !== false) {
+	if (is_file($path)) {
+		exploreFile($path, $argTwo, $argThree);
+	} elseif (is_dir($path)) {
+		$files = scandir($path);
+		foreach ($files as $file) {
 			if ($file != "." && $file != "..") {
-				$filePath = $directoryPath . '/' . $file;
-				$relativePath = $parentPath . '/' . $file;
-
-				if (is_file($filePath)) {
-					// Perform the command on the file here
-				} elseif (is_dir($filePath)) {
-					// If the item is a directory, recursively call this function
-					exploreDirectory($filePath, $command, $fileCount, $relativePath);
-				}
+				$filePath = $path . '/' . $file;
+				explorePath($filePath, $argTwo, $argThree, $path);
 			}
 		}
-		closedir($directory);
-	} else {
-		echo "Cannot open directory: $directoryPath\n";
 	}
+}
+
+function exploreFile($path, $argTwo, $argThree) {
+	// Do something for each file
 }
 
 // Start the timer
 $startTime = microtime(true);
 
-// Get the directory path and command from the command line arguments
-$directoryPath = $argv[1];
-$command = $argv[2];
+// Get the path and command from the command line arguments
+$path = $argv[1];
+$argTwo = $argv[2];
+$argThree = $argv[3];
 
-// Initialize the file count
-$fileCount = 0;
-
-// Call the exploreDirectory function
-exploreDirectory($directoryPath, $command, $fileCount);
+// Call the explorePath function
+explorePath($path, $argTwo, $argThree);
 
 // Stop the timer and calculate the execution time
 $endTime = microtime(true);
@@ -55,7 +51,6 @@ $executionTime = $endTime - $startTime;
 
 // Display the results
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-echo "Total files: \033[32m$fileCount\033[0m\n";
 echo "Execution time: \033[32m$executionTime\033[0m seconds\n";
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 
