@@ -5,7 +5,7 @@
  */
 function exploreDirectory($directoryPath, $numLines, $command, &$fileCount, &$filesMoreThanXLinesCount, $parentPath = '') {
 	if (!isset($directoryPath) || !isset($numLines)) {
-		echo "\033[31mPlease indicate the path of the folder to analyze and the number of lines.\033[0m\n";
+		echo "\033[31mPlease indicate the path of the folder or file to analyze and the number of lines.\033[0m\n";
 		echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 		exit;
 	}
@@ -91,4 +91,7 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /**
  *  Creator :
  *  https://github.com/SkaikruNashoba
+ * 
+ *  Version
+ *  1.0.0
  */
