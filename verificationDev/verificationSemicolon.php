@@ -7,10 +7,10 @@ $argTwo = $argv[2];
 $argThree = $argv[3];
 echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
 
-function explorePath($path, &$argTwo, &$argThree, $parentPath = '') {
+function explorePath($path, &$argTwo, &$argThree) {
 
 	if (!isset($path)) {
-		echo "\033[31mPlease indicate the path of the folder to analyze.\033[0m\n";
+		echo "\033[31mPlease indicate the path of the folder or file to analyze.\033[0m\n";
 		echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 		exit;
 	}
@@ -108,4 +108,7 @@ if (isset($argTwo) && $argTwo !== '-noEdit') {
 /**
  *  Creator
  *  https://github.com/SkaikruNashoba
+ * 
+ *  Version
+ *  1.0.0
  */
