@@ -6,7 +6,7 @@
 
 function exploreDirectory($directoryPath, $command, $commandDir, &$fileCount, $parentPath = '') {
 	if (!isset($directoryPath)) {
-		echo "\033[31mPlease indicate the path of the folder to analyze.\033[0m\n";
+		echo "\033[31mPlease indicate the path of the folder or file to analyze.\033[0m\n";
 		echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 		exit;
 	}
@@ -89,4 +89,7 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /**
  *  Creator :
  *  https://github.com/SkaikruNashoba
+ * 
+ *  Version
+ *  1.0.0
  */
