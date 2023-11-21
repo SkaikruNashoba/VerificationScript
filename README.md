@@ -11,10 +11,9 @@ This repository is used to create scripts verifying projects according to user r
 - Replace the second [option] with a number to select the number of lines that a file must not exceed
 
 ### verificationPascalOrCamelPersonal.php
-- Run the command `php verificationPascalOrCamelPersonal.php [path] [option] [option]` in your terminal.
+- Run the command `php verificationPascalOrCamelPersonal.php [path] [option]` in your terminal.
 - Replace `[path]` with the path you want to verify.
 - Replace `[option]` with `-noExplain` if you do not want the script to explain
-- Replace the second `[option]` with `-onlyFile` if you only want to show files, or `-onlyDir` if you only want to show directories.
 
 ### verificationSelemicon.php
 - Run the command `php verificationSelemicon.php [path] [option] [option]` in your terminal.
