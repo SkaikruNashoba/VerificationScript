@@ -3,7 +3,6 @@
 $path = $argv[1];
 $argTwo = $argv[2];
 $argThree = $argv[3];
-echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
 
 function explorePath($path, &$argTwo, &$argThree) {
 	if (!isset($path)) {
@@ -77,15 +76,12 @@ function exploreFile($filePath, $argTwo, $argThree) {
 				echo " ]\n";
 			}
 		} else {
-			echo "\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
-			echo "\033[32mNo line affected for $filePath\033[0m\n\n";
-			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			echo "\033[32mNo line affected for $filePath\033[0m\n";
 		}
 		file_put_contents($filePath, $newContents);
 	} else {
-		echo "\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
-		echo "\033[31mFile $filePath is not a js or php file.\033[0m\n\n";
-		echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+		echo "\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
+		echo "\033[31mFile $filePath is not a js or php file.\033[0m\n";
 	}
 }
 
