@@ -29,6 +29,22 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 		$newContents = '';
 		$lineNumber = 0;
 		$listOfLine = [];
+		$passedFiles = [
+			'reportWebVitals.js',
+			'reportWebVitals.tsx',
+			'reportWebVitals.ts',
+			'index.js',
+			'index.tsx',
+			'index.ts',
+			'App.test.js',
+			'setupTests.js',
+		];
+		foreach ($passedFiles as $passedFile) {
+			if (str_contains($filePath, $passedFile)) {
+				echo "\033[32mThe file nammed \"$filePath\" was passed automaticaly\033[0m\n";
+				continue;
+			}
+		}
 
 		foreach ($fileContents as $line) {
 			if ($argThree !== "-noExplain") {
@@ -40,10 +56,17 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 			$trimmedLine = rtrim($line);
 
 			if (
+				preg_match("/^function App\(.*\)\s*\{$/U", $trimmedLine)
+				|| preg_match("/^export default App;?$/U", $trimmedLine)
+			) {
+				$newContents .= $trimmedLine . PHP_EOL;
+				continue;
+			}
+			if (
 				(
-					preg_match("/function ([\w]+)\(.*\)\s*\{$/U", $trimmedLine, $matches)
+					preg_match("/^function ([\w]+)\(.*\)\s*\{$/U", $trimmedLine, $matches)
 					|| preg_match("/^const ([\w]+)( = \(.*\) \=> )\{/U", $trimmedLine, $matches)
-					|| preg_match("/export default ([\w]+);?$/U", $trimmedLine, $matches)
+					|| preg_match("/^export default ([\w]+);?$/U", $trimmedLine, $matches)
 				)
 			) {
 				if (isset($argTwo) && $argTwo === '-noEdit') {
@@ -72,7 +95,7 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 			}
 		}
 
-		if (!empty($listOfLine)) {
+		if (!empty($listOfLine) && !in_array($filePath, $passedFiles)) {
 			if (isset($argThree) && $argThree === "-noExplain") {
 				echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 				echo "Lines affected for $filePath:\n\n[ ";
