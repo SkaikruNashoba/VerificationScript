@@ -109,7 +109,6 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 		}
 		file_put_contents($filePath, $newContents);
 	} else {
-		echo "\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
 		echo "\033[31mFile $filePath is not a js or php file.\033[0m\n";
 	}
 }
