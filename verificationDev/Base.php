@@ -30,7 +30,7 @@ function explorePath($path, &$argTwo, &$argThree) {
 	}
 }
 
-function exploreFile($path, $argTwo, $argThree) {
+function exploreFile($filePath, $argTwo, $argThree) {
 	// Do something for each file
 }
 
@@ -47,7 +47,7 @@ explorePath($path, $argTwo, $argThree);
 
 // Stop the timer and calculate the execution time
 $endTime = microtime(true);
-$executionTime = $endTime - $startTime;
+$executionTime = round($endTime - $startTime, 2);
 
 // Display the results
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";

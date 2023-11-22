@@ -1,10 +1,7 @@
 <?php
 
-$path = $argv[1];
-$argTwo = $argv[2];
-$argThree = $argv[3];
+function explorePath($path, &$argTwo, &$argThree, &$argFour) {
 
-function explorePath($path, &$argTwo, &$argThree) {
 	if (!isset($path)) {
 		echo "\033[31mPlease indicate the path of the folder or file to analyze.\033[0m\n";
 		echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
@@ -12,19 +9,19 @@ function explorePath($path, &$argTwo, &$argThree) {
 	}
 
 	if (is_file($path)) {
-		exploreFile($path, $argTwo, $argThree);
+		exploreFile($path, $argTwo, $argThree, $argFour);
 	} elseif (is_dir($path)) {
 		$files = scandir($path);
 		foreach ($files as $file) {
 			if ($file != "." && $file != "..") {
 				$filePath = $path . '/' . $file;
-				explorePath($filePath, $argTwo, $argThree, $path);
+				explorePath($filePath, $argTwo, $argThree, $argFour);
 			}
 		}
 	}
 }
 
-function exploreFile($filePath, $argTwo, $argThree) {
+function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 	echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
 	$fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
 	if ($fileExtension == 'js' || $fileExtension == 'php') {
@@ -41,27 +38,27 @@ function exploreFile($filePath, $argTwo, $argThree) {
 			}
 
 			$trimmedLine = rtrim($line);
-			if (preg_match("/\}$/U", $trimmedLine)) {
-				if (
-					preg_match("/\},$|(\w+:\s*)(['\"]?[\w]+.?+[\w]+['\"]?+),?$|: (['\"]?[\w\W ?]++['\"]?)$|(\w+:\s*)(['\"]?[\w]++['\"]?+),?$/U", $fileContents[$lineNumber - 1])
-				) {
-					$lineNumber++;
-					$newContents .= $trimmedLine . PHP_EOL;
-					continue;
-				}
-			}
 
 			if (
-				!preg_match("/\{[^\}]+\}$|':$|\{$|;$|}}$|return \($|\),$|{`[\w\W\d]*`}$/U", $trimmedLine)
-				&& preg_match("/'}$|\)$|}$|return?[\w\W]+$|break$|exit$|(from|require) ['\"]?[\w\W]*['\"]?$|(export) [\w\W]*$/U", $trimmedLine)
+				(
+					preg_match("/function ([\w]+)\(.*\)\s*\{$/U", $trimmedLine, $matches)
+					|| preg_match("/^const ([\w]+)( = \(.*\) \=> )\{/U", $trimmedLine, $matches)
+					|| preg_match("/export default ([\w]+);?$/U", $trimmedLine, $matches)
+				)
 			) {
 				if (isset($argTwo) && $argTwo === '-noEdit') {
-					echo "\033[31mPotential missing a semicolon at this line \033[1;31m(line " . ($lineNumber + 1) . ")\033[0m\033[31m of $filePath\033[0m\n";
+					echo "\033[31mPotential missing prefix at this line \033[1;31m(line " . ($lineNumber + 1) . ")\033[0m\033[31m of $filePath\033[0m\n";
 					$listOfLine[] = $lineNumber;
 				} else {
-					$trimmedLine .= ';';
-					$listOfLine[] = $lineNumber;
-					echo "Modified line $lineNumber of file $filePath\n";
+					if (str_contains($matches[1], $argFour)) {
+						$newContents .= $trimmedLine . PHP_EOL;
+						continue;
+					} else {
+						$replaceMatch = $argFour . $matches[1];
+						$trimmedLine = str_replace($matches[1], $replaceMatch, $trimmedLine);
+						$listOfLine[] = $lineNumber;
+						echo "Modified line $lineNumber of file $filePath\n";
+					}
 				}
 			}
 
@@ -96,19 +93,22 @@ function exploreFile($filePath, $argTwo, $argThree) {
 
 $startTime = microtime(true);
 
-explorePath($path, $argTwo, $argThree);
+$path = $argv[1];
+$argTwo = $argv[2];
+$argThree = $argv[3];
+$argFour = $argv[4];
+
+explorePath($path, $argTwo, $argThree, $argFour);
 
 $endTime = microtime(true);
 $executionTime = round($endTime - $startTime, 2);
 
-echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
-if (isset($argTwo) && $argTwo !== '-noEdit') {
-	echo "\n\033[31mPlease check all modified files in case of a potential error during replacement\033[0m\n\n";
-	echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
-}
+echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+echo "Execution time: \033[32m$executionTime\033[0m seconds\n";
+echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 
 /**
- *  Creator
+ *  Creator :
  *  https://github.com/SkaikruNashoba
  * 
  *  Version

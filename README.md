@@ -19,10 +19,17 @@ This repository is used to create scripts verifying projects according to user r
 - Run the command `php verificationSelemicon.php [path] [option] [option]` in your terminal.
 - Replace `[path]` with the path you want to verify.
 - Replace `[option]` with `-noEdit` if you do not want the script rewrite the file.
-- Replace the second `[option]` with `-withoutExplain` if you don't want explication and you want only number of line affected
+- Replace the second `[option]` with `-noExplain` if you don't want explication and you want only number of line affected
 
 if you don't want [option], write a "`-`" instead of [option]
 Please ensure that you have PHP installed and configured on your machine to run these scripts.
+
+### verificationPrefix.php
+- Run the command `php verificationPrefix.php [path] [option] [option] [option]` in your terminal.
+- Replace `[path]` with the path you want to verify.
+- Replace `[option]` with `-noEdit` if you do not want the script rewrite the file.
+- Replace the second `[option]` with `-noExplain` if you don't want explication and you want only number of line affected
+- Replace third `[option]` by a prefix you want
 
 ## Developer
 
