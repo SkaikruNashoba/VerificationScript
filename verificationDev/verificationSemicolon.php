@@ -112,5 +112,5 @@ if (isset($argTwo) && $argTwo !== '-noEdit') {
  *  https://github.com/SkaikruNashoba
  * 
  *  Version
- *  1.0.0
+ *  1.0.26
  */

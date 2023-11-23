@@ -77,5 +77,5 @@ echo "\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
  *  https://github.com/SkaikruNashoba
  * 
  *  Version
- *  1.0.0
+ *  1.0.16
  */

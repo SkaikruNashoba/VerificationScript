@@ -3,26 +3,26 @@
 This repository is used to create scripts verifying projects according to user requirements
 
 ## How to use the script:
+Please ensure that you have PHP installed and configured on your machine to run these scripts.
+
+(if you don't want `[option]` you can replace `[option]` by a "-")
 
 ### verificationLine.php
 - Run the command `php verificationLine.php [path] [option] [option]` in your terminal.
 - Replace `[path]` with the path you want to verify.
-- Replace `[option]` with `-noExplain` if you do not want the script to explain how it navigates through folders/subfolders/files. (if you want the explanation, just write "`-`" for [option])
+- Replace `[option]` with `-noExplain` if you do not want the script to explain how it navigates through folders/subfolders/files.
 - Replace the second [option] with a number to select the number of lines that a file must not exceed
 
 ### verificationPascalOrCamelPersonal.php
 - Run the command `php verificationPascalOrCamelPersonal.php [path] [option]` in your terminal.
 - Replace `[path]` with the path you want to verify.
-- Replace `[option]` with `-noExplain` if you do not want the script to explain
+- Replace `[option]` with `-noExplain` if you don't want the script explain to you
 
 ### verificationSelemicon.php
 - Run the command `php verificationSelemicon.php [path] [option] [option]` in your terminal.
 - Replace `[path]` with the path you want to verify.
 - Replace `[option]` with `-noEdit` if you do not want the script rewrite the file.
 - Replace the second `[option]` with `-noExplain` if you don't want explication and you want only number of line affected
-
-if you don't want [option], write a "`-`" instead of [option]
-Please ensure that you have PHP installed and configured on your machine to run these scripts.
 
 ### verificationPrefix.php
 - Run the command `php verificationPrefix.php [path] [option] [option] [option]` in your terminal.
