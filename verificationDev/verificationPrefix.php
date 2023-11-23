@@ -31,11 +31,7 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 		$listOfLine = [];
 		$passedFiles = [
 			'reportWebVitals.js',
-			'reportWebVitals.tsx',
-			'reportWebVitals.ts',
 			'index.js',
-			'index.tsx',
-			'index.ts',
 			'App.test.js',
 			'setupTests.js',
 		];
@@ -47,12 +43,6 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 		}
 
 		foreach ($fileContents as $line) {
-			if ($argThree !== "-noExplain") {
-				echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
-				echo "\033[32mActual line\033[0m : " . ($lineNumber) . "\n";
-				echo "\033[32mActual file\033[0m : $filePath\n";
-			}
-
 			$trimmedLine = rtrim($line);
 
 			if (
@@ -70,7 +60,6 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 				)
 			) {
 				if (isset($argTwo) && $argTwo === '-noEdit') {
-					echo "\033[31mPotential missing prefix at this line \033[1;31m(line " . ($lineNumber + 1) . ")\033[0m\033[31m of $filePath\033[0m\n";
 					$listOfLine[] = $lineNumber;
 				} else {
 					if (str_contains($matches[1], $argFour)) {
@@ -87,29 +76,23 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 
 			$lineNumber++;
 			$newContents .= $trimmedLine . PHP_EOL;
-
-			if (isset($argThree) && $argThree !== "-noExplain") {
-				echo "\033[32mActual line content\033[0m : $line";
-				echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
-				echo "\033[33mNext line...\033[0m\n\n";
-			}
 		}
 
 		if (!empty($listOfLine) && !in_array($filePath, $passedFiles)) {
 			if (isset($argThree) && $argThree === "-noExplain") {
 				echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
-				echo "Lines affected for $filePath:\n\n[ ";
+				echo "Lines affected for $filePath:\n(Line where missing a semilicon or a comma)\n\n[ ";
 				foreach ($listOfLine as $line) {
 					echo " \033[31m" . ($line + 1) . "\033[0m,";
 				}
-				echo " ]\n";
+				echo " ]\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
 			}
 		} else {
 			echo "\033[32mNo line affected for $filePath\033[0m\n";
 		}
 		file_put_contents($filePath, $newContents);
 	} else {
-		echo "\033[31mFile $filePath is not a js or php file.\033[0m\n";
+		echo "\033[31mFile $filePath isn't a js or php file.\033[0m\n";
 	}
 }
 
@@ -134,5 +117,5 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  *  https://github.com/SkaikruNashoba
  * 
  *  Version
- *  1.0.3
+ *  1.0.4
  */

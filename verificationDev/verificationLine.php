@@ -71,11 +71,14 @@ $endTime = microtime(true);
 $executionTime = round($endTime - $startTime, 2);
 
 echo "\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+echo "Execution time: \033[32m$executionTime\033[0m seconds\n";
+echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+
 
 /**
  *  Creator :
  *  https://github.com/SkaikruNashoba
  * 
  *  Version
- *  1.0.16
+ *  1.0.17
  */

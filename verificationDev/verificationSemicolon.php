@@ -16,7 +16,11 @@ function explorePath($path, &$argTwo, &$argThree) {
 	} elseif (is_dir($path)) {
 		$files = scandir($path);
 		foreach ($files as $file) {
-			if ($file != "." && $file != "..") {
+			if ($file === "node_modules" || $file === "vendor" || $file === "build" || $file === "public") {
+				echo "\033[35mFolder \"$file\" was skip automatically.\033[0m\n";
+				continue;
+			}
+			if ($file !== "." && $file !== "..") {
 				$filePath = $path . '/' . $file;
 				explorePath($filePath, $argTwo, $argThree, $path);
 			}
@@ -25,21 +29,38 @@ function explorePath($path, &$argTwo, &$argThree) {
 }
 
 function exploreFile($filePath, $argTwo, $argThree) {
-	echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
 	$fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
-	if ($fileExtension == 'js' || $fileExtension == 'php') {
+	if ($fileExtension === 'js' || $fileExtension === 'php') {
 		$fileContents = file($filePath);
 		$newContents = '';
 		$lineNumber = 0;
 		$listOfLine = [];
+		$passedFiles = [
+			'reportWebVitals.js',
+			'index.js',
+			'App.test.js',
+			'setupTests.js',
+			".gitignore",
+			"package-lock.json",
+			"composer.lock",
+			"yarn.lock",
+			"webpack.mix.js",
+			"gulpfile.js",
+			"Gruntfile.js",
+			"package.json",
+			"composer.json",
+			"yarn.json",
+			"App.test.js",
+		];
+
+		foreach ($passedFiles as $passedFile) {
+			if (str_contains($filePath, $passedFile)) {
+				echo "\033[35mFile nammed \"$filePath\" was passed automaticaly\033[0m\n";
+				continue;
+			}
+		}
 
 		foreach ($fileContents as $line) {
-			if ($argThree !== "-noExplain") {
-				echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
-				echo "\033[32mActual line\033[0m : " . ($lineNumber) . "\n";
-				echo "\033[32mActual file\033[0m : $filePath\n";
-			}
-
 			$trimmedLine = rtrim($line);
 			$matched = false;
 
@@ -58,44 +79,40 @@ function exploreFile($filePath, $argTwo, $argThree) {
 					break;
 				case preg_match("/^\s*?[\w\W]*:\s*\".*\"$/U", $trimmedLine, $matches) && preg_match("/^\s*?[\w\W]*:\s*\".*\",$/U", $fileContents[$lineNumber - 1]):
 					// var_dump("case 4");
-					if (isset($argTwo) && $argTwo === '-noEdit') {
-						echo "\033[31mPotential missing a comma at this line \033[1;31m(line " . ($lineNumber + 1) . ")\033[0m\033[31m of $filePath\033[0m\n";
-					} else {
+					if (isset($argTwo) && $argTwo !== '-noEdit') {
 						$trimmedLine .= ',';
 					}
+					$listOfLine[] = $lineNumber;
 					$newContents .= $trimmedLine . PHP_EOL;
 					$lineNumber++;
 					$matched = false;
 					continue 2;
 				case preg_match("/^\s*?\}$/U", $trimmedLine) && preg_match("/^\s*?[\w\W]*:\s*\".*\",?$/U", $fileContents[$lineNumber - 1]):
 					// var_dump("case 5");
-					if (isset($argTwo) && $argTwo === '-noEdit') {
-						echo "\033[31mPotential missing a comma at this line \033[1;31m(line " . ($lineNumber + 1) . ")\033[0m\033[31m of $filePath\033[0m\n";
-					} else {
+					if (isset($argTwo) && $argTwo !== '-noEdit') {
 						$trimmedLine .= ',';
 					}
+					$listOfLine[] = $lineNumber;
 					$newContents .= $trimmedLine . PHP_EOL;
 					$lineNumber++;
 					$matched = false;
 					continue 2;
 				case preg_match("/^\s*?\}$/U", $trimmedLine) && preg_match("/^\s*?\},?$/U", $fileContents[$lineNumber - 1]):
 					// var_dump("case 6");
-					if (isset($argTwo) && $argTwo === '-noEdit') {
-						echo "\033[31mPotential missing a comma at this line \033[1;31m(line " . ($lineNumber + 1) . ")\033[0m\033[31m of $filePath\033[0m\n";
-					} else {
+					if (isset($argTwo) && $argTwo !== '-noEdit') {
 						$trimmedLine .= ',';
 					}
+					$listOfLine[] = $lineNumber;
 					$newContents .= $trimmedLine . PHP_EOL;
 					$lineNumber++;
 					$matched = false;
 					continue 2;
 				case preg_match("/^\s*.*:\s*\"?.*\"$/U", $trimmedLine) && preg_match("/^\s*\".*\":\s*\{/U", $fileContents[$lineNumber - 1]):
 					// var_dump("case 7");
-					if (isset($argTwo) && $argTwo === '-noEdit') {
-						echo "\033[31mPotential missing a comma at this line \033[1;31m(line " . ($lineNumber + 1) . ")\033[0m\033[31m of $filePath\033[0m\n";
-					} else {
+					if (isset($argTwo) && $argTwo !== '-noEdit') {
 						$trimmedLine .= ',';
 					}
+					$listOfLine[] = $lineNumber;
 					$newContents .= $trimmedLine . PHP_EOL;
 					$lineNumber++;
 					$matched = false;
@@ -103,8 +120,9 @@ function exploreFile($filePath, $argTwo, $argThree) {
 			}
 
 			if ($matched === true) {
-				$lineNumber++;
+				$listOfLine[] = $lineNumber;
 				$newContents .= $trimmedLine . PHP_EOL;
+				$lineNumber++;
 				continue;
 			}
 
@@ -113,7 +131,6 @@ function exploreFile($filePath, $argTwo, $argThree) {
 				&& preg_match("/'}$|\)$|}$|return?[\w\W]+$|break$|exit$|(from|require) ['\"]?[\w\W]*['\"]?$|(export) [\w\W]*$/U", $trimmedLine)
 			) {
 				if (isset($argTwo) && $argTwo === '-noEdit') {
-					echo "\033[31mPotential missing a semicolon at this line \033[1;31m(line " . ($lineNumber + 1) . ")\033[0m\033[31m of $filePath\033[0m\n";
 					$listOfLine[] = $lineNumber;
 				} else {
 					$trimmedLine .= ';';
@@ -121,33 +138,25 @@ function exploreFile($filePath, $argTwo, $argThree) {
 					echo "Modified line $lineNumber of file $filePath\n";
 				}
 			}
-
 			$lineNumber++;
 			$newContents .= $trimmedLine . PHP_EOL;
-
-			if (isset($argThree) && $argThree !== "-noExplain") {
-				echo "\033[32mActual line content\033[0m : $line";
-				echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
-				echo "\033[33mNext line...\033[0m\n\n";
-			}
 		}
 
 		if (!empty($listOfLine)) {
 			if (isset($argThree) && $argThree === "-noExplain") {
 				echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
-				echo "Lines affected for $filePath:\n\n[ ";
+				echo "Lines affected for $filePath:\n(Line where missing a semilicon or a comma)\n\n[ ";
 				foreach ($listOfLine as $line) {
 					echo " \033[31m" . ($line + 1) . "\033[0m,";
 				}
-				echo " ]\n";
+				echo " ]\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
 			}
 		} else {
 			echo "\033[32mNo line affected for $filePath\033[0m\n";
 		}
 		file_put_contents($filePath, $newContents);
 	} else {
-		echo "\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
-		echo "\033[31mFile $filePath is not a js or php file.\033[0m\n";
+		echo "\033[34mFile $filePath isn't a js or php file\033[0m\n";
 	}
 }
 
@@ -159,7 +168,11 @@ $endTime = microtime(true);
 $executionTime = round($endTime - $startTime, 2);
 
 echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+echo "\033[32mExecution time: $executionTime seconds\033[0m\n";
+echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+
 if (isset($argTwo) && $argTwo !== '-noEdit') {
+	echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 	echo "\n\033[31mPlease check all modified files in case of a potential error during replacement\033[0m\n\n";
 	echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 }
@@ -169,5 +182,5 @@ if (isset($argTwo) && $argTwo !== '-noEdit') {
  *  https://github.com/SkaikruNashoba
  * 
  *  Version
- *  1.2.0
+ *  1.2.2
  */
