@@ -41,18 +41,75 @@ function exploreFile($filePath, $argTwo, $argThree) {
 			}
 
 			$trimmedLine = rtrim($line);
-			if (preg_match("/\}$/U", $trimmedLine)) {
-				if (
-					preg_match("/\},$|(\w+:\s*)(['\"]?[\w]+.?+[\w]+['\"]?+),?$|: (['\"]?[\w\W ?]++['\"]?)$|(\w+:\s*)(['\"]?[\w]++['\"]?+),?$/U", $fileContents[$lineNumber - 1])
-				) {
-					$lineNumber++;
+			$matched = false;
+
+			switch (true) {
+				case preg_match("/^\s*\)$/U", $trimmedLine) && preg_match("/^\s*}\)/U", $fileContents[$lineNumber - 1]):
+					// var_dump("case 1");
+					$matched = true;
+					break;
+				case preg_match("/^\s*}, [\w\W]*?\)$/U", $trimmedLine) && preg_match("/^\s*\)$/U", $fileContents[$lineNumber - 1]):
+					// var_dump("case 2");
+					$matched = true;
+					break;
+				case preg_match("/^\s*\".*?\"\}/U", $trimmedLine) && preg_match("/^\s*\".*?\"\s*?\+$/U", $fileContents[$lineNumber - 1]):
+					// var_dump("case 3");
+					$matched = true;
+					break;
+				case preg_match("/^\s*?[\w\W]*:\s*\".*\"$/U", $trimmedLine, $matches) && preg_match("/^\s*?[\w\W]*:\s*\".*\",$/U", $fileContents[$lineNumber - 1]):
+					// var_dump("case 4");
+					if (isset($argTwo) && $argTwo === '-noEdit') {
+						echo "\033[31mPotential missing a comma at this line \033[1;31m(line " . ($lineNumber + 1) . ")\033[0m\033[31m of $filePath\033[0m\n";
+					} else {
+						$trimmedLine .= ',';
+					}
 					$newContents .= $trimmedLine . PHP_EOL;
-					continue;
-				}
+					$lineNumber++;
+					$matched = false;
+					continue 2;
+				case preg_match("/^\s*?\}$/U", $trimmedLine) && preg_match("/^\s*?[\w\W]*:\s*\".*\",?$/U", $fileContents[$lineNumber - 1]):
+					// var_dump("case 5");
+					if (isset($argTwo) && $argTwo === '-noEdit') {
+						echo "\033[31mPotential missing a comma at this line \033[1;31m(line " . ($lineNumber + 1) . ")\033[0m\033[31m of $filePath\033[0m\n";
+					} else {
+						$trimmedLine .= ',';
+					}
+					$newContents .= $trimmedLine . PHP_EOL;
+					$lineNumber++;
+					$matched = false;
+					continue 2;
+				case preg_match("/^\s*?\}$/U", $trimmedLine) && preg_match("/^\s*?\},?$/U", $fileContents[$lineNumber - 1]):
+					// var_dump("case 6");
+					if (isset($argTwo) && $argTwo === '-noEdit') {
+						echo "\033[31mPotential missing a comma at this line \033[1;31m(line " . ($lineNumber + 1) . ")\033[0m\033[31m of $filePath\033[0m\n";
+					} else {
+						$trimmedLine .= ',';
+					}
+					$newContents .= $trimmedLine . PHP_EOL;
+					$lineNumber++;
+					$matched = false;
+					continue 2;
+				case preg_match("/^\s*.*:\s*\"?.*\"$/U", $trimmedLine) && preg_match("/^\s*\".*\":\s*\{/U", $fileContents[$lineNumber - 1]):
+					// var_dump("case 7");
+					if (isset($argTwo) && $argTwo === '-noEdit') {
+						echo "\033[31mPotential missing a comma at this line \033[1;31m(line " . ($lineNumber + 1) . ")\033[0m\033[31m of $filePath\033[0m\n";
+					} else {
+						$trimmedLine .= ',';
+					}
+					$newContents .= $trimmedLine . PHP_EOL;
+					$lineNumber++;
+					$matched = false;
+					continue 2;
+			}
+
+			if ($matched === true) {
+				$lineNumber++;
+				$newContents .= $trimmedLine . PHP_EOL;
+				continue;
 			}
 
 			if (
-				!preg_match("/\{[^\}]+\}$|':$|\{$|;$|}}$|return \($|\),$|{`[\w\W\d]*`}$/U", $trimmedLine)
+				!preg_match("/\{[^\}]+\}$|':$|\{$|;$|}}$|return \($|\),$|{`[\w\W\d]*`}$|^\s*\}\)|^\s*[\w]*=({\"?.*\"?})$/U", $trimmedLine)
 				&& preg_match("/'}$|\)$|}$|return?[\w\W]+$|break$|exit$|(from|require) ['\"]?[\w\W]*['\"]?$|(export) [\w\W]*$/U", $trimmedLine)
 			) {
 				if (isset($argTwo) && $argTwo === '-noEdit') {
@@ -112,5 +169,5 @@ if (isset($argTwo) && $argTwo !== '-noEdit') {
  *  https://github.com/SkaikruNashoba
  * 
  *  Version
- *  1.0.26
+ *  1.2.0
  */
