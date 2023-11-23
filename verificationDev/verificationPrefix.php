@@ -13,6 +13,10 @@ function explorePath($path, &$argTwo, &$argThree, &$argFour) {
 	} elseif (is_dir($path)) {
 		$files = scandir($path);
 		foreach ($files as $file) {
+			if ($file === "node_modules" || $file === "vendor" || $file === "build" || $file === "public") {
+				echo "\033[35mV\033[0m \033[93mFolder\033[0m '$file' \033[35mwas passed automaticaly\033[0m\n";
+				continue;
+			}
 			if ($file != "." && $file != "..") {
 				$filePath = $path . '/' . $file;
 				explorePath($filePath, $argTwo, $argThree, $argFour);
@@ -34,10 +38,16 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 			'index.js',
 			'App.test.js',
 			'setupTests.js',
+			".gitignore",
+			"webpack.mix.js",
+			"gulpfile.js",
+			"Gruntfile.js",
+			"App.test.js",
 		];
+
 		foreach ($passedFiles as $passedFile) {
 			if (str_contains($filePath, $passedFile)) {
-				echo "\033[32mThe file nammed \"$filePath\" was passed automaticaly\033[0m\n";
+				echo "\033[35mV\033[0m \033[93mFile\033[0m '$filePath' \033[35mwas skip automaticaly\033[0m\n";
 				continue;
 			}
 		}
@@ -88,11 +98,11 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 				echo " ]\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
 			}
 		} else {
-			echo "\033[32mNo line affected for $filePath\033[0m\n";
+			echo "\033[32mV\033[0m \033[93mFile\033[0m '$filePath' \033[32mvalidated\033[0m.\n";
 		}
 		file_put_contents($filePath, $newContents);
 	} else {
-		echo "\033[31mFile $filePath isn't a js or php file.\033[0m\n";
+		echo "\033[31mX\033[0m \033[93mFile\033[0m $filePath isn't a js or php file.\033[0m\n";
 	}
 }
 
@@ -113,9 +123,9 @@ echo "Execution time: \033[32m$executionTime\033[0m seconds\n";
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 
 /**
- *  Creator :
+ *  Creator:
  *  https://github.com/SkaikruNashoba
  * 
  *  Version
- *  1.0.4
+ *  1.0.5
  */

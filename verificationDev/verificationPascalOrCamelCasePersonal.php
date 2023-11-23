@@ -1,12 +1,11 @@
 <?php
 
-$path = $argv[1];
-$argTwo = $argv[2];
+$path = $argv[1] = $argv[2];
 $argThree = $argv[3];
 
 echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
 
-function explorePath($path, &$argTwo) {
+function explorePath($path) {
 	if (!isset($path)) {
 		echo "\033[31mPlease indicate the path of the folder or file to analyze.\033[0m\n";
 		echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
@@ -14,16 +13,20 @@ function explorePath($path, &$argTwo) {
 	}
 
 	if (is_file($path)) {
-		exploreFile($path, $argTwo);
+		exploreFile($path);
 	} elseif (is_dir($path)) {
 		$files = scandir($path);
 		foreach ($files as $file) {
+			if ($file === "node_modules" || $file === "vendor" || $file === "build" || $file === "public") {
+				echo "\033[35mV\033[0m \033[93mFolder\033[0m '$file' \033[35mwas skip automaticaly\033[0m\n";
+				continue;
+			}
 			if ($file != "." && $file != "..") {
 				$filePath = $path . '/' . $file;
 				if (is_dir($filePath)) {
 					validateFolder($filePath);
 				}
-				explorePath($filePath, $argTwo);
+				explorePath($filePath);
 			}
 		}
 	}
@@ -39,25 +42,33 @@ function validateFolder($folderPath) {
 	}
 }
 
-function exploreFile($path, $argTwo) {
+function exploreFile($path) {
 	if (!isset($path)) {
 		echo "\033[31mPlease indicate the path of the folder or file to analyze.\033[0m\n";
 		echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 		exit;
 	}
+	$passedFiles = [
+		'App.test.js',
+		".gitignore",
+		"webpack.mix.js",
+		"gulpfile.js",
+		"Gruntfile.js",
+		"App.test.js",
+	];
 
-	if (isset($argTwo) && $argTwo === '-noExplain') {
-		echo "";
-	} else {
-		echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-		echo "Scan of the file \033[33m$path\033[0m\n";
-		echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+	foreach ($passedFiles as $passedFile) {
+		if (str_contains($path, $passedFile)) {
+			echo "\033[35mV\033[0m \033[93mFile\033[0m '$path' \033[35mwas skip automaticaly\033[0m\n";
+			continue;
+		}
 	}
+
 	$fileNameParts = explode('.', basename($path));
 	$baseName = reset($fileNameParts);
 
 	if (strtolower($baseName) === 'index') {
-		echo "\033[32mV\033[0m \033[93mFile\033[0m '$path' \033[32mAutomatic validation\033[0m.\n";
+		echo "\033[35mV\033[0m \033[93mFile\033[0m '$path' \033[35mwas skip automaticaly\033[0m\n";
 	} elseif (!preg_match('/^([[:lower:]]+)[A-Z][a-zA-Z]+|^[A-Z][a-z]+$/', $baseName)) {
 		echo "\033[31mX\033[0m \033[93mFile\033[0m '$path' \033[31mnot validated\033[0m.\n";
 	} else {
@@ -67,8 +78,7 @@ function exploreFile($path, $argTwo) {
 
 $startTime = microtime(true);
 $path = $argv[1];
-$argTwo = $argv[2];
-explorePath($path, $argTwo);
+explorePath($path);
 $endTime = microtime(true);
 $executionTime = round($endTime - $startTime, 2);
 
@@ -77,9 +87,9 @@ echo "Execution time : \033[32m$executionTime seconds\033[0m\n";
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 
 /**
- *  Creator :
+ *  Creator:
  *  https://github.com/SkaikruNashoba
  * 
  *  Version
- *  1.0.2
+ *  1.0.3
  */

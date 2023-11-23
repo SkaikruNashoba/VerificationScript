@@ -41,21 +41,15 @@ function exploreFile($filePath, $argTwo, $argThree) {
 			'App.test.js',
 			'setupTests.js',
 			".gitignore",
-			"package-lock.json",
-			"composer.lock",
-			"yarn.lock",
 			"webpack.mix.js",
 			"gulpfile.js",
 			"Gruntfile.js",
-			"package.json",
-			"composer.json",
-			"yarn.json",
 			"App.test.js",
 		];
 
 		foreach ($passedFiles as $passedFile) {
 			if (str_contains($filePath, $passedFile)) {
-				echo "\033[35mFile nammed \"$filePath\" was passed automaticaly\033[0m\n";
+				echo "\033[35mV\033[0m \033[93mFile\033[0m '$filePath' \033[35mwas skip automaticaly\033[0m\n";
 				continue;
 			}
 		}
@@ -152,11 +146,11 @@ function exploreFile($filePath, $argTwo, $argThree) {
 				echo " ]\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
 			}
 		} else {
-			echo "\033[32mNo line affected for $filePath\033[0m\n";
+			echo "\033[32mV\033[0m \033[93mFile\033[0m '$filePath' \033[32mvalidated\033[0m.\n";
 		}
 		file_put_contents($filePath, $newContents);
 	} else {
-		echo "\033[34mFile $filePath isn't a js or php file\033[0m\n";
+		echo "\033[31mX\033[0m \033[93mFile\033[0m $filePath \033[34misn't a js or php file\033[0m\n";
 	}
 }
 
@@ -178,9 +172,12 @@ if (isset($argTwo) && $argTwo !== '-noEdit') {
 }
 
 /**
- *  Creator
+ *  Creator:
  *  https://github.com/SkaikruNashoba
  * 
+ *  Contributors:
+ *  https://github.com/Baptiste-R-epi
+ * 
  *  Version
- *  1.2.2
+ *  1.2.3
  */

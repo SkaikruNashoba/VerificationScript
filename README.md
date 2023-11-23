@@ -14,9 +14,8 @@ Please ensure that you have PHP installed and configured on your machine to run 
 - Replace the second [option] with a number to select the number of lines that a file must not exceed
 
 ### verificationPascalOrCamelPersonal.php
-- Run the command `php verificationPascalOrCamelPersonal.php [path] [option]` in your terminal.
+- Run the command `php verificationPascalOrCamelPersonal.php [path]` in your terminal.
 - Replace `[path]` with the path you want to verify.
-- Replace `[option]` with `-noExplain` if you don't want the script explain to you
 
 ### verificationSelemicon.php
 - Run the command `php verificationSelemicon.php [path] [option] [option]` in your terminal.
