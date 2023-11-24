@@ -4,6 +4,7 @@ $path = $argv[1];
 $argTwo = $argv[2];
 $argThree = $argv[3];
 
+echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 function explorePath($path, &$argTwo, &$argThree) {
 	if (!isset($path)) {
 		echo "\033[31mPlease indicate the path of the folder or file to analyze.\033[0m\n";
@@ -59,20 +60,25 @@ function exploreFile($filePath, $argTwo, $argThree) {
 			$matched = false;
 
 			switch (true) {
+				case preg_match("/^\n*$/U", $trimmedLine) && preg_match("/^\n*$/U", $fileContents[$lineNumber - 1]):
+					continue 2;
 				case preg_match("/^\s*\)$/U", $trimmedLine) && preg_match("/^\s*}\)/U", $fileContents[$lineNumber - 1]):
-					// var_dump("case 1");
+					var_dump("case 0");
 					$matched = true;
 					break;
 				case preg_match("/^\s*}, [\w\W]*?\)$/U", $trimmedLine) && preg_match("/^\s*\)$/U", $fileContents[$lineNumber - 1]):
-					// var_dump("case 2");
+					var_dump("case 1");
 					$matched = true;
 					break;
 				case preg_match("/^\s*\".*?\"\}/U", $trimmedLine) && preg_match("/^\s*\".*?\"\s*?\+$/U", $fileContents[$lineNumber - 1]):
-					// var_dump("case 3");
+					var_dump("case 2");
 					$matched = true;
 					break;
-				case preg_match("/^\s*?[\w\W]*:\s*\".*\"$/U", $trimmedLine, $matches) && preg_match("/^\s*?[\w\W]*:\s*\".*\",$/U", $fileContents[$lineNumber - 1]):
-					// var_dump("case 4");
+				case preg_match("/^\s*\}$/U", $trimmedLine) && preg_match("/^\s*:\s*\"?.*\"?$/U", $fileContents[$lineNumber - 1]) && preg_match("/^\s*\?\s*\".*\"$/U", $fileContents[$lineNumber - 2]):
+					$matched = false;
+					break;
+				case preg_match("/^\s*[\w\W]*:\s*\".*\"$/U", $trimmedLine, $matches) && preg_match("/^\s*[\w\W]*:\s*\".*\",$/U", $fileContents[$lineNumber - 1]):
+					var_dump("case 4");
 					if (isset($argTwo) && $argTwo !== '-noEdit') {
 						$trimmedLine .= ',';
 					}
@@ -81,8 +87,8 @@ function exploreFile($filePath, $argTwo, $argThree) {
 					$lineNumber++;
 					$matched = false;
 					continue 2;
-				case preg_match("/^\s*?\}$/U", $trimmedLine) && preg_match("/^\s*?[\w\W]*:\s*\".*\",?$/U", $fileContents[$lineNumber - 1]):
-					// var_dump("case 5");
+				case preg_match("/^\s*\}$/U", $trimmedLine) && preg_match("/^\s*[\w\W]*:\s*\".*\",?$/U", $fileContents[$lineNumber - 1]):
+					var_dump("case 5");
 					if (isset($argTwo) && $argTwo !== '-noEdit') {
 						$trimmedLine .= ',';
 					}
@@ -91,8 +97,8 @@ function exploreFile($filePath, $argTwo, $argThree) {
 					$lineNumber++;
 					$matched = false;
 					continue 2;
-				case preg_match("/^\s*?\}$/U", $trimmedLine) && preg_match("/^\s*?\},?$/U", $fileContents[$lineNumber - 1]):
-					// var_dump("case 6");
+				case preg_match("/^\s*\}$/U", $trimmedLine) && preg_match("/^\s*\},$/U", $fileContents[$lineNumber - 1]):
+					var_dump("case 6");
 					if (isset($argTwo) && $argTwo !== '-noEdit') {
 						$trimmedLine .= ',';
 					}
@@ -102,9 +108,49 @@ function exploreFile($filePath, $argTwo, $argThree) {
 					$matched = false;
 					continue 2;
 				case preg_match("/^\s*.*:\s*\"?.*\"$/U", $trimmedLine) && preg_match("/^\s*\".*\":\s*\{/U", $fileContents[$lineNumber - 1]):
-					// var_dump("case 7");
+					var_dump("case 7");
 					if (isset($argTwo) && $argTwo !== '-noEdit') {
 						$trimmedLine .= ',';
+					}
+					$listOfLine[] = $lineNumber;
+					$newContents .= $trimmedLine . PHP_EOL;
+					$lineNumber++;
+					$matched = false;
+					continue 2;
+				case preg_match("/^\s*\}$/U", $trimmedLine) && preg_match("/^\s*\};$/U", $fileContents[$lineNumber - 1]):
+					var_dump("case 8");
+					if (isset($argTwo) && $argTwo !== '-noEdit') {
+						$trimmedLine .= ';';
+					}
+					$listOfLine[] = $lineNumber;
+					$newContents .= $trimmedLine . PHP_EOL;
+					$lineNumber++;
+					$matched = false;
+					continue 2;
+				case preg_match("/^\s*\}$/U", $trimmedLine) && preg_match("/^\s*\)(;?)$/U", $fileContents[$lineNumber - 1]) && preg_match("/^\s*<\/>$/U", $fileContents[$lineNumber - 2]):
+					var_dump("case 9");
+					if (isset($argTwo) && $argTwo !== '-noEdit') {
+						$trimmedLine .= ';';
+					}
+					$listOfLine[] = $lineNumber;
+					$newContents .= $trimmedLine . PHP_EOL;
+					$lineNumber++;
+					$matched = false;
+					continue 2;
+				case preg_match("/^\s*\}$/U", $trimmedLine) && preg_match("/^\s*(.*)\"?(\)|(\)\]);?)$/U", $fileContents[$lineNumber - 1]):
+					var_dump("case 10");
+					if (isset($argTwo) && $argTwo !== '-noEdit') {
+						$trimmedLine .= ';';
+					}
+					$listOfLine[] = $lineNumber;
+					$newContents .= $trimmedLine . PHP_EOL;
+					$lineNumber++;
+					$matched = false;
+					continue 2;
+				case preg_match("/^\s*\}$/U", $trimmedLine) && preg_match("/^\s*\}$/U", $fileContents[$lineNumber - 1]) && preg_match("/^\s*(.*)\"?\)$/U", $fileContents[$lineNumber - 2]):
+					var_dump("case 11");
+					if (isset($argTwo) && $argTwo !== '-noEdit') {
+						$trimmedLine .= ';';
 					}
 					$listOfLine[] = $lineNumber;
 					$newContents .= $trimmedLine . PHP_EOL;
@@ -122,9 +168,10 @@ function exploreFile($filePath, $argTwo, $argThree) {
 
 			if (
 				!preg_match("/\{[^\}]+\}$|':$|\{$|;$|}}$|return \($|\),$|{`[\w\W\d]*`}$|^\s*\}\)|^\s*[\w]*=({\"?.*\"?})$/U", $trimmedLine)
-				&& preg_match("/'}$|\)$|}$|return?[\w\W]+$|break$|exit$|(from|require) ['\"]?[\w\W]*['\"]?$|(export) [\w\W]*$/U", $trimmedLine)
+				&& preg_match("/'}$|\)$|return?[\w\W]+$|break$|exit$|(from|require) ['\"]?[\w\W]*['\"]?$|(export) [\w\W]*$/U", $trimmedLine)
 			) {
 				if (isset($argTwo) && $argTwo === '-noEdit') {
+					var_dump("case 12");
 					$listOfLine[] = $lineNumber;
 				} else {
 					$trimmedLine .= ';';
@@ -132,8 +179,8 @@ function exploreFile($filePath, $argTwo, $argThree) {
 					echo "Modified line $lineNumber of file $filePath\n";
 				}
 			}
-			$lineNumber++;
 			$newContents .= $trimmedLine . PHP_EOL;
+			$lineNumber++;
 		}
 
 		if (!empty($listOfLine)) {
@@ -166,8 +213,7 @@ echo "\033[32mExecution time: $executionTime seconds\033[0m\n";
 echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 
 if (isset($argTwo) && $argTwo !== '-noEdit') {
-	echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
-	echo "\n\033[31mPlease check all modified files in case of a potential error during replacement\033[0m\n\n";
+	echo "\033[31mPlease check all modified files in case of a potential error during replacement\033[0m\n";
 	echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 }
 
@@ -179,5 +225,5 @@ if (isset($argTwo) && $argTwo !== '-noEdit') {
  *  https://github.com/Baptiste-R-epi
  * 
  *  Version
- *  1.2.3
+ *  1.2.4
  */
