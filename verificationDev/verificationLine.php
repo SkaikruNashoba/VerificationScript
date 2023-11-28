@@ -1,7 +1,23 @@
 <?php
 
-/**
- * Explore directory and subdirectory to check if files have more than X lines
+
+/** Global explanation
+ * 
+ * This script is used to verify if the file has more than [option] lines.
+ * 
+ * How to use:
+ * php verificationLine.php [path] [option] [option] 
+ * 
+ * [path] = path of the folder or file to analyze
+ * [option] = -noExplain (to not explain the process)
+ * [option] = 300 (to indicate the number of lines)
+ * 
+ * @param string $path
+ * 
+ * @param string $argTwo
+ * @param string $argThree
+ * 
+ * @return cli output
  */
 
 echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";

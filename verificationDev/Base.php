@@ -7,7 +7,7 @@
  * @param string $argTwo The second argument of the command.
  * @param string $argThree The third argument of the command.
  * 
- * @return string The result of the command.
+ * @return cli output
  */
 function explorePath($path, &$argTwo, &$argThree) {
 

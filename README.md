@@ -17,7 +17,7 @@ Please ensure that you have PHP installed and configured on your machine to run 
 - Run the command `php verificationPascalOrCamelPersonal.php [path]` in your terminal.
 - Replace `[path]` with the path you want to verify.
 
-### verificationSelemicon.php
+### verificationFile.php
 - Run the command `php verificationSelemicon.php [path] [option] [option]` in your terminal.
 - Replace `[path]` with the path you want to verify.
 - Replace `[option]` with `-noEdit` if you do not want the script rewrite the file.

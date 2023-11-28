@@ -1,7 +1,22 @@
 <?php
 
-$path = $argv[1] = $argv[2];
-$argThree = $argv[3];
+/** Global explanation
+ * 
+ * This script is used to verify if the folder and file name is in PascalCase or camelCase.
+ * 
+ * How to use:
+ * php verificationPascaleOrCamelCasePersonal.php [path]
+ * 
+ * [path] = path of the folder or file to analyze
+ * 
+ * @param string $path
+ * 
+ * @return cli output
+ */
+
+
+
+$path = $argv[1];
 
 echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
 
@@ -55,12 +70,15 @@ function exploreFile($path) {
 		"gulpfile.js",
 		"Gruntfile.js",
 		"App.test.js",
+		"README.md",
+		"package.json",
+		"package-lock.json",
 	];
 
 	foreach ($passedFiles as $passedFile) {
 		if (str_contains($path, $passedFile)) {
 			echo "\033[35mV\033[0m \033[93mFile\033[0m '$path' \033[35mwas skip automaticaly\033[0m\n";
-			continue;
+			return;
 		}
 	}
 
