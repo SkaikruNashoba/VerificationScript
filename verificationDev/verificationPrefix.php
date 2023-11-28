@@ -47,12 +47,12 @@ function explorePath($path, &$argTwo, &$argThree, &$argFour) {
 };
 
 function exploreFile($filePath, $argTwo, $argThree, $argFour) {
+	$fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
 	echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
-	if (isset($argFour) && str_contains($argFour, "_")) {
+	if (isset($argFour) && str_contains($argFour, "_") && $fileExtension === 'php') {
 		echo "\033[1;31mAn underscore was detected in the prefix, please use a camelCase or PascalCase prefix.\033[0m\n";
 		return;
 	};
-	$fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
 	if ($fileExtension == 'js' || $fileExtension == 'php') {
 		$fileContents = file($filePath);
 		$newContents = '';
@@ -108,7 +108,7 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 					$matchResult = $matches[1];
 					break;
 
-				case preg_match("/^\s*([a-zA-Z0-9]*[^\s*])\(.*\);?$/", $trimmedLine, $matches):
+				case preg_match("/^\s*([a-zA-Z0-9]*[^\s*])\(.*\);?$/", $trimmedLine, $matches) && $fileExtension == 'php':
 					if (isset($argThree) && $argThree !== "-noExplain") {
 						echo "case 4 | prefix: " . $argFour . " | line: " . ($lineNumber + 1) . "\n";
 					};
