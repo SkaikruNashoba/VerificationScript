@@ -101,7 +101,7 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 					$matchResult = $matches[1];
 					break;
 
-				case preg_match("/^export default ([\w]+);?$/", $trimmedLine, $matches):
+				case preg_match("/^export default ([\w]+);?$/", $trimmedLine, $matches):;
 					if (isset($argThree) && $argThree !== "-noExplain") {
 						echo "case 3 | prefix: " . $argFour . " | line: " . ($lineNumber + 1) . "\n";
 					};
@@ -114,7 +114,7 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 					};
 					$matchResult = $matches[1];
 					break;
-			}
+			};
 
 			if (!is_null($matchResult)) {
 				if (isset($argTwo) && $argTwo === '-noEdit') {
@@ -128,9 +128,9 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 						$trimmedLine = str_replace($matchResult, $replaceMatch, $trimmedLine);
 						$listOfLine[] = $lineNumber;
 						echo "\033[32mModified line " . ($lineNumber + 1) . " of file $filePath\033[0m\n";
-					}
-				}
-			}
+					};
+				};
+			};
 			$lineNumber++;
 			$newContents .= $trimmedLine . PHP_EOL;
 		};
@@ -163,9 +163,11 @@ explorePath($path, $argTwo, $argThree, $argFour);
 
 $endTime = microtime(true);
 $executionTime = round($endTime - $startTime, 2);
-echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-echo "Execution time: \033[32m$executionTime\033[0m seconds\n";
-echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+if (isset($argThree) && $argThree !== "-noExplain") {
+	echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+	echo "Execution time: \033[32m$executionTime\033[0m seconds\n";
+	echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+};
 
 /**
  *  Creator:

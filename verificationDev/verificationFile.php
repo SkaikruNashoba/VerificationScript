@@ -355,8 +355,10 @@ explorePath($path, $argTwo, $argThree);
 $endTime = microtime(true);
 $executionTime = round($endTime - $startTime, 2);
 echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
-echo "\033[32mExecution time: $executionTime seconds\033[0m\n";
-echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+if (isset($argThree) && $argThree !== "-noExplain") {
+	echo "\033[32mExecution time: $executionTime seconds\033[0m\n";
+	echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+};
 if (isset($argTwo) && $argTwo !== '-noEdit') {
 	echo "\033[31mPlease check all modified files in case of a potential error during replacement\033[0m\n";
 	echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
