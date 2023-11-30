@@ -1,4 +1,6 @@
 *
 !Scripts/
 !Scripts/*
+!Scripts/Base/*
+!Scripts/Verifications/*
 !.gitignore
