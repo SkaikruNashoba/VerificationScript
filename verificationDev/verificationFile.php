@@ -22,6 +22,18 @@ if (($argv[1] === '-h' || $argv[1] === '-help' || $argv[1] === '?')) {
 	$path = $argv[1];
 	$argTwo = $argv[2];
 	$argThree = $argv[3];
+	switch (true) {
+		case (isset($argTwo) && !($argTwo == '-noEdit' || $argTwo === '-')):
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			echo "\033[31mPlease indicate a valid command for 1st option.\033[0m\n";
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			exit;
+		case (isset($argThree) && !($argThree == '-noExplain' || $argThree === '-')):
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			echo "\033[31mPlease indicate a valid command for 2nd option.\033[0m\n";
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			exit;
+	}
 }
 
 if (isset($argThree) && $argThree !== "-noExplain") {
