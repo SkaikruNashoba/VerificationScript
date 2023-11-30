@@ -26,19 +26,19 @@ if (($argv[1] === '-h' || $argv[1] === '-help' || $argv[1] === '?')) {
 	$argThree = $argv[3];
 	$argFour = $argv[4];
 	switch (true) {
-		case (isset($argTwo) && !($argTwo == '-noEdit' || $argTwo === '-')):
+		case (!isset($argTwo)):
 			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 			echo "\033[31mPlease indicate a valid command for 1st option.\033[0m\n";
 			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 			exit;
-		case (isset($argThree) && !($argThree == '-noExplain' || $argThree === '-')):
+		case (!isset($argThree)):
 			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 			echo "\033[31mPlease indicate a valid command for 2nd option.\033[0m\n";
 			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 			exit;
-		case (isset($argFour) && !($argFour === '-')):
+		case (!isset($argFour)):
 			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
-			echo "\033[31mPlease indicate a valid command for 2nd option.\033[0m\n";
+			echo "\033[31mPlease indicate a valid command for 3rd option.\033[0m\n";
 			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 			exit;
 	}
@@ -70,7 +70,9 @@ function explorePath($path, &$argTwo, &$argThree, &$argFour) {
 
 function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 	$fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
-	echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
+	if (isset($argThree) && $argThree !== "-noExplain") {
+		echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
+	};
 	if (isset($argFour) && str_contains($argFour, "_") && $fileExtension === 'php') {
 		echo "\033[1;31mAn underscore was detected in the prefix, please use a camelCase or PascalCase prefix.\033[0m\n";
 		return;
@@ -103,6 +105,12 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 
 			if (preg_match("/^function App\(.*\)\s*\{$|^export default App;?$/U", $trimmedLine)) {
 				$newContents .= $trimmedLine . PHP_EOL;
+				$lineNumber++;
+				continue;
+			};
+			if (str_contains($trimmedLine, $argFour)) {
+				$newContents .= $trimmedLine . PHP_EOL;
+				$lineNumber++;
 				continue;
 			};
 
@@ -114,34 +122,42 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 					};
 					$matchResult = $matches[1];
 					break;
-
 				case preg_match("/^const ([\w]+)( = \(.*\) \=> )\{$/", $trimmedLine, $matches):
 					if (isset($argThree) && $argThree !== "-noExplain") {
 						echo "case 2 | prefix: " . $argFour . " | line: " . ($lineNumber + 1) . "\n";
 					};
 					$matchResult = $matches[1];
 					break;
-
 				case preg_match("/^export default ([\w]+);?$/", $trimmedLine, $matches):;
 					if (isset($argThree) && $argThree !== "-noExplain") {
 						echo "case 3 | prefix: " . $argFour . " | line: " . ($lineNumber + 1) . "\n";
 					};
 					$matchResult = $matches[1];
 					break;
-
 				case preg_match("/^\s*([a-zA-Z0-9]*[^\s*])\(.*\);?$/", $trimmedLine, $matches) && $fileExtension === 'php':
 					if (isset($argThree) && $argThree !== "-noExplain") {
 						echo "case 4 | prefix: " . $argFour . " | line: " . ($lineNumber + 1) . "\n";
 					};
 					$matchResult = $matches[1];
 					break;
-					// 	/* speacial case for App.js in React project work in progress */
-					// case preg_match("/^(import|const)\s*(\w++)\s*(from|require)\s*[\"|\'].(\/(.*))*[\"|\'];?$/U", $trimmedLine, $matches) && $fileExtension === 'js':
-					// 	if (isset($argThree) && $argThree !== "-noExplain") {
-					// 		echo "case 5 | prefix: " . $argFour . " | line: " . ($lineNumber + 1) . "\n";
-					// 	};
-					// 	var_dump($matches);
-					// 	exit;
+				case preg_match("/^.*(\w++ )\s*(from|require)\s*\"/U", $trimmedLine, $matches):
+					if (isset($argThree) && $argThree !== "-noExplain") {
+						echo "case 5 | prefix: " . $argFour . " | line: " . ($lineNumber + 1) . "\n";
+					};
+					$matchResult = $matches[1];
+					break;
+				case preg_match("/^\s*<Route\s*path=[\"|'].*[\"|']\s*element=\{<(.* )\s*\/>/U", $trimmedLine, $matches):
+					if (isset($argThree) && $argThree !== "-noExplain") {
+						echo "case 6 | prefix: " . $argFour . " | line: " . ($lineNumber + 1) . "\n";
+					};
+					$matchResult = $matches[1];
+					break;
+				case preg_match("/^\s*<(\w* )\/>$/U", $trimmedLine, $matches):
+					if (isset($argThree) && $argThree !== "-noExplain") {
+						echo "case 7 | prefix: " . $argFour . " | line: " . ($lineNumber + 1) . "\n";
+					};
+					$matchResult = $matches[1];
+					break;
 			};
 
 			if (!is_null($matchResult)) {
@@ -152,7 +168,6 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 						echo "\033[32mV\033[0m \033[93mLine\033[0m " . ($lineNumber + 1) . " \033[32mwas validated\033[0m.\n";
 					} else {
 						$replaceMatch = $argFour . ucfirst($matchResult);
-
 						$trimmedLine = str_replace($matchResult, $replaceMatch, $trimmedLine);
 						$listOfLine[] = $lineNumber;
 						echo "\033[32mModified line " . ($lineNumber + 1) . " of file $filePath\033[0m\n";
@@ -166,14 +181,14 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 		if (!empty($listOfLine) && !in_array($filePath, $passedFiles)) {
 			if (isset($argThree) && $argThree !== "-noExplain") {
 				echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
-				echo "Lines affected for $filePath:\n(Don't have a prefix)\n\n[ ";
+				echo "Lines affected for $filePath:\n(Possible no prefix)\n\n[ ";
 				foreach ($listOfLine as $line) {
 					echo " \033[31m" . ($line + 1) . "\033[0m,";
 				};
 				echo " ]\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
 			};
 		} else {
-			echo "\033[32mV\033[0m \033[93mFile\033[0m '$filePath' \033[32mvalidated or not edited\033[0m\n";
+			echo "\033[32mV\033[0m \033[93mFile\033[0m '$filePath' \033[32mvalidated\033[0m\n";
 		};
 		file_put_contents($filePath, $newContents);
 	} else {
@@ -182,10 +197,7 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 };
 
 $startTime = microtime(true);
-
-
 explorePath($path, $argTwo, $argThree, $argFour);
-
 $endTime = microtime(true);
 $executionTime = round($endTime - $startTime, 2);
 if (isset($argThree) && $argThree !== "-noExplain") {
@@ -199,5 +211,5 @@ if (isset($argThree) && $argThree !== "-noExplain") {
  *  https://github.com/SkaikruNashoba
  *
  *  Version
- *  1.0.5
+ *  1.0.7
  */
