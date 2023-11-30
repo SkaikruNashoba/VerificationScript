@@ -5,7 +5,8 @@ This repository is used to create scripts verifying projects according to user r
 ## How to use the script:
 Please ensure that you have PHP installed and configured on your machine to run these scripts.
 
-(if you don't want `[option]` you can replace `[option]` by a "-")
+(If you don't want `[option]` you can replace `[option]` by a "-").
+(If you want help for a script you can use "?" or "-h" or "-help" instead of `[path]`).
 
 ### verificationLine.php
 - Run the command `php verificationLine.php [path] [option] [option]` in your terminal.

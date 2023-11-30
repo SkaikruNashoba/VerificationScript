@@ -1,26 +1,48 @@
 <?php
 
-/** Global explanation
- *
- * This script is used to verify if the function name is prefixed by the prefix given in argument.
- * if the function name is not prefixed, the script will add the prefix to the function name.
- *
- * How to use:
- * php verificationPrefix.php [path] [option] [option] [prefix]
- *
- * [path] = path of the folder or file to analyze
- * [option] = -noEdit (to not edit the files)
- * [option] = -noExplain (to not explain the process)
- * [option] = -prefix (to add a prefix to the function name)
- *
- * @param string $path
- *
- * @param string $argTwo
- * @param string $argThree
- * @param string $argFour
- *
- * @return cli output
- */
+if (($argv[1] === '-h' || $argv[1] === '-help' || $argv[1] === '?')) {
+	echo ("\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n");
+	echo ("\033[32mGlobal explanation of verificationPrefix.php\033[0m\n\n");
+	echo ("This script is used to verify if the function name is prefixed by the prefix given in argument.\n");
+	echo ("if the function name is not prefixed, the script will add the prefix to the function name.\n\n");
+	echo ("How to use:\n");
+	echo ("php verificationPrefix.php \033[1;33m[path]\033[0m \033[33m[option] [option] [prefix]\033[0m\n\n");
+	echo (" [path]  = path of the folder or file to analyze\n");
+	echo ("[option] = \"-noEdit\" (to not edit the files)\n");
+	echo ("[option] = \"-noExplain\" (to not explain the process)\n");
+	echo ("[option] = \"-[your_prefix]\" (to add a prefix to the function name)\n\n");
+	echo ("@param string \033[1;33m\$path\033[0m\n");
+	echo ("@param string \033[33m\$argTwo\033[0m\n");
+	echo ("@param string \033[33m\$argThree\033[0m\n");
+	echo ("@param string \033[33m\$argFour\033[0m\n\n");
+	echo ("\033[1;32m@return cli output\033[0m\n");
+	echo ("\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n");
+	echo ("\033[1;31m!!! Please read README.md for more explanation !!!\033[0m\n");
+	echo ("\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n");
+	exit;
+} else {
+	$path = $argv[1];
+	$argTwo = $argv[2];
+	$argThree = $argv[3];
+	$argFour = $argv[4];
+	switch (true) {
+		case (isset($argTwo) && !($argTwo == '-noEdit' || $argTwo === '-')):
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			echo "\033[31mPlease indicate a valid command for 1st option.\033[0m\n";
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			exit;
+		case (isset($argThree) && !($argThree == '-noExplain' || $argThree === '-')):
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			echo "\033[31mPlease indicate a valid command for 2nd option.\033[0m\n";
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			exit;
+		case (isset($argFour) && !($argFour === '-')):
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			echo "\033[31mPlease indicate a valid command for 2nd option.\033[0m\n";
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			exit;
+	}
+}
 
 function explorePath($path, &$argTwo, &$argThree, &$argFour) {
 	if (!isset($path)) {
@@ -53,7 +75,7 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 		echo "\033[1;31mAn underscore was detected in the prefix, please use a camelCase or PascalCase prefix.\033[0m\n";
 		return;
 	};
-	if ($fileExtension == 'js' || $fileExtension == 'php') {
+	if ($fileExtension === 'js' || $fileExtension === 'php') {
 		$fileContents = file($filePath);
 		$newContents = '';
 		$lineNumber = 0;
@@ -63,11 +85,10 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 			'index.js',
 			'App.test.js',
 			'setupTests.js',
-			".gitignore",
-			"webpack.mix.js",
-			"gulpfile.js",
-			"Gruntfile.js",
-			"App.test.js",
+			'.gitignore',
+			'webpack.mix.js',
+			'gulpfile.js',
+			'Gruntfile.js',
 		];
 
 		foreach ($passedFiles as $passedFile) {
@@ -108,12 +129,19 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 					$matchResult = $matches[1];
 					break;
 
-				case preg_match("/^\s*([a-zA-Z0-9]*[^\s*])\(.*\);?$/", $trimmedLine, $matches) && $fileExtension == 'php':
+				case preg_match("/^\s*([a-zA-Z0-9]*[^\s*])\(.*\);?$/", $trimmedLine, $matches) && $fileExtension === 'php':
 					if (isset($argThree) && $argThree !== "-noExplain") {
 						echo "case 4 | prefix: " . $argFour . " | line: " . ($lineNumber + 1) . "\n";
 					};
 					$matchResult = $matches[1];
 					break;
+					// 	/* speacial case for App.js in React project work in progress */
+					// case preg_match("/^(import|const)\s*(\w++)\s*(from|require)\s*[\"|\'].(\/(.*))*[\"|\'];?$/U", $trimmedLine, $matches) && $fileExtension === 'js':
+					// 	if (isset($argThree) && $argThree !== "-noExplain") {
+					// 		echo "case 5 | prefix: " . $argFour . " | line: " . ($lineNumber + 1) . "\n";
+					// 	};
+					// 	var_dump($matches);
+					// 	exit;
 			};
 
 			if (!is_null($matchResult)) {
@@ -145,7 +173,7 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 				echo " ]\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
 			};
 		} else {
-			echo "\033[32mV\033[0m \033[93mFile\033[0m '$filePath' \033[32mvalidated\033[0m.\n";
+			echo "\033[32mV\033[0m \033[93mFile\033[0m '$filePath' \033[32mvalidated or not edited\033[0m\n";
 		};
 		file_put_contents($filePath, $newContents);
 	} else {
@@ -154,10 +182,7 @@ function exploreFile($filePath, $argTwo, $argThree, $argFour) {
 };
 
 $startTime = microtime(true);
-$path = $argv[1];
-$argTwo = $argv[2];
-$argThree = $argv[3];
-$argFour = $argv[4];
+
 
 explorePath($path, $argTwo, $argThree, $argFour);
 

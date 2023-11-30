@@ -1,22 +1,21 @@
 <?php
 
-/** Global explanation
- * 
- * This script is used to verify if the folder and file name is in PascalCase or camelCase.
- * 
- * How to use:
- * php verificationPascaleOrCamelCasePersonal.php [path]
- * 
- * [path] = path of the folder or file to analyze
- * 
- * @param string $path
- * 
- * @return cli output
- */
-
-
-
-$path = $argv[1];
+if (($argv[1] === '-h' || $argv[1] === '-help' || $argv[1] === '?')) {
+	echo ("\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n");
+	echo ("\033[32mGlobal explanation of verificationPascalOrCamelCasePersonal.php\033[0m\n\n");
+	echo ("This script is used to verify if the folder and file name is in PascalCase or camelCase.\n\n");
+	echo ("\033[32mHow to use\033[0m:\n");
+	echo ("php verificationPascalOrCamelCasePersonal.php \033[1;33m[path]\033[0m\n\n");
+	echo ("[path] = path of the folder or file to analyze\n\n");
+	echo ("@param string \033[1;33m\$path\033[0m\n\n");
+	echo ("\033[1;32m@return cli output\033[0m\n");
+	echo ("\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n");
+	echo ("\033[1;31m!!! Please read README.md for more explanation !!!\033[0m\n");
+	echo ("\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n");
+	exit;
+} else {
+	$path = $argv[1];
+}
 
 echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
 

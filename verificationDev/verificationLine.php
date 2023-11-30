@@ -1,24 +1,44 @@
 <?php
 
-
-/** Global explanation
- * 
- * This script is used to verify if the file has more than [option] lines.
- * 
- * How to use:
- * php verificationLine.php [path] [option] [option] 
- * 
- * [path] = path of the folder or file to analyze
- * [option] = -noExplain (to not explain the process)
- * [option] = 300 (to indicate the number of lines)
- * 
- * @param string $path
- * 
- * @param string $argTwo
- * @param string $argThree
- * 
- * @return cli output
- */
+if (($argv[1] === '-h' || $argv[1] === '-help' || $argv[1] === '?')) {
+	echo ("\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n");
+	echo ("\033[32mGlobal explanation of verificationLine.php\033[0m\n\n");
+	echo ("This script is used to verify if the file has more than number lines (you specify the number).\n\n");
+	echo ("\033[32mHow to use\033[0m:\n");
+	echo ("php verificationLine.php \033[1;33m[path]\033[0m \033[33m[option] [option]\033[0m\n\n");
+	echo (" [path]  = path of the folder or file to analyze\n");
+	echo ("[option] = \"-noExplain\" (to not explain the process)\n");
+	echo ("[option] = \"[number]\" (to indicate the number of lines)\n\n");
+	echo ("@param string \033[1;33m\$path\033[0m\n");
+	echo ("@param string \033[33m\$argTwo\033[0m\n");
+	echo ("@param int    \033[33m\$argThree\033[0m\n\n");
+	echo ("\033[1;32m@return cli output\033[0m\n");
+	echo ("\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n");
+	echo ("\033[1;31m!!! Please read README.md for more explanation !!!\033[0m\n");
+	echo ("\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n");
+	exit;
+} else {
+	$path = $argv[1];
+	$command = $argv[2];
+	$numLines = $argv[3];
+	switch (true) {
+		case (isset($numLines) && (is_nan($numLines) || $numLines <= 0)):
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			echo "\033[31mPlease indicate the number of lines. (the number must be positive and not equal to 0)\033[0m\n";
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			exit;
+		case (isset($command) && (!str_contains($command, "-"))):
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			echo "\033[31mPlease indicate a valid command.\033[0m\n";
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			exit;
+		case (isset($command) && !($command == '-noExplain' || $command === '-')):
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			echo "\033[31mThis command doesn't exist.\033[0m\n";
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
+			exit;
+	}
+}
 
 echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n";
 
@@ -28,8 +48,6 @@ function explorePath($path, &$command, &$numLines) {
 		echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 		exit;
 	}
-
-
 
 	if (is_file($path)) {
 		exploreFile($path, $command, $numLines);
@@ -79,9 +97,7 @@ function exploreFile($path, $command, $numLines) {
 }
 
 $startTime = microtime(true);
-$path = $argv[1];
-$command = $argv[2];
-$numLines = $argv[3];
+
 explorePath($path, $command, $numLines);
 $endTime = microtime(true);
 $executionTime = round($endTime - $startTime, 2);

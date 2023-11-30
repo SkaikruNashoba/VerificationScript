@@ -1,29 +1,28 @@
 <?php
 
-/** Global explanation
- *
- * This script is used to check if all semicolons or comma are present in the files of a project.
- * It can also add them automatically.
- * Also check if there is no carriage return on 3 lines in a row
- *
- * How to use:
- * php verificationSemicolon.php [path] [option] [option]
- *
- * [path] = path of the folder or file to analyze
- * [option] = -noEdit (to not edit the files)
- * [option] = -noExplain (to not explain the process)
- *
- * @param string $path
- *
- * @param string $argTwo
- * @param string $argThree
- *
- * @return cli output
- */
-
-$path = $argv[1];
-$argTwo = $argv[2];
-$argThree = $argv[3];
+if (($argv[1] === '-h' || $argv[1] === '-help' || $argv[1] === '?')) {
+	echo ("\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n");
+	echo ("\033[32mGlobal explanation of verificationFile.php\033[0m\n\n");
+	echo ("This script is used to check if all semicolons or comma are present in the files of a project.\n");
+	echo ("Also check if there is no carriage return on 3 lines in a row\n\n");
+	echo ("\033[32mHow to use\033[0m:\n");
+	echo ("php verificationSemicolon.php \033[1;33m[path]\033[0m \033[33m[option] [option]\033[0m\n\n");
+	echo (" [path]  = path of the folder or file to analyze\n");
+	echo ("[option] = \"-noEdit\" (to not edit the files)\n");
+	echo ("[option] = \"-noExplain\" (to not explain the process)\n\n");
+	echo ("@param string \033[1;33m\$path\033[0m\n");
+	echo ("@param string \033[33m\$argTwo\033[0m\n");
+	echo ("@param string \033[33m\$argThree\033[0m\n\n");
+	echo ("\033[1;32m@return cli output\033[0m\n");
+	echo ("\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n");
+	echo ("\033[1;31m!!! Please read README.md for more explanation !!!\033[0m\n");
+	echo ("\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n\n");
+	exit;
+} else {
+	$path = $argv[1];
+	$argTwo = $argv[2];
+	$argThree = $argv[3];
+}
 
 if (isset($argThree) && $argThree !== "-noExplain") {
 	echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
