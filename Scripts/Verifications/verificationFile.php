@@ -101,7 +101,7 @@ function exploreFile($filePath, $argTwo, $argThree) {
 			$trimmedLine = rtrim($line);
 			$matched = false;
 
-			/* Skip a part of code */
+			/* Start skip a part of code */
 			if (
 				preg_match("/^\s*<style\s*.*>$|^\s*\/\*(\*?)\s*(.*[^\*\/])?$|^\s*if\s*\(?$/U", $trimmedLine)
 				|| (preg_match("/^\s*<>$/U", $trimmedLine) && preg_match("/^\s*return\s*\($/U", $fileContents[$lineNumber - 1]))
@@ -307,7 +307,7 @@ function exploreFile($filePath, $argTwo, $argThree) {
 					if (isset($argTwo) && $argTwo !== '-noEdit') {
 						continue 2;
 					};
-				case preg_match("/^\n*$/U", $trimmedLine) && preg_match("/^function\s*.*\{$/U", $fileContents[$lineNumber - 1]):
+				case preg_match("/^\n*$/U", $trimmedLine) && preg_match("/^\s*(function|foreach|while)\s*.*\{$/U", $fileContents[$lineNumber - 1]):
 					if (isset($argThree) && $argThree !== "-noExplain") {
 						echo ("\033[35m" . $lineNumber + 1 . " | (carriage return) | 16\033[0m\n");
 					};

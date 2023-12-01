@@ -41,8 +41,8 @@ if (($argv[1] === '-h' || $argv[1] === '-help' || $argv[1] === '?')) {
 			echo "\033[31mPlease indicate a valid command for 3rd option.\033[0m\n";
 			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 			exit;
-	}
-}
+	};
+};
 
 function explorePath($path, &$argTwo, &$argThree, &$argFour) {
 	if (!isset($path)) {

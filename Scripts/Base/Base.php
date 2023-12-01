@@ -2,20 +2,19 @@
 
 /**
  * The exploreDirectory function is the base of this script. It recursively explores a directory and performs a command on each file.
- * 
+ *
  * @param string $path The path of the folder or file to analyze.
  * @param string $argTwo The second argument of the command.
  * @param string $argThree The third argument of the command.
- * 
+ *
  * @return cli output
  */
 function explorePath($path, &$argTwo, &$argThree) {
-
 	if (!isset($path)) {
 		echo "\033[31mPlease indicate the path of the folder or file to analyze.\033[0m\n";
 		echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 		exit;
-	}
+	};
 
 	if (is_file($path)) {
 		exploreFile($path, $argTwo, $argThree);
@@ -25,14 +24,14 @@ function explorePath($path, &$argTwo, &$argThree) {
 			if ($file != "." && $file != "..") {
 				$filePath = $path . '/' . $file;
 				explorePath($filePath, $argTwo, $argThree, $path);
-			}
-		}
-	}
-}
+			};
+		};
+	};
+};
 
 function exploreFile($filePath, $argTwo, $argThree) {
 	// Do something for each file
-}
+};
 
 // Start the timer
 $startTime = microtime(true);
@@ -57,7 +56,7 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /**
  *  Creator :
  *  https://github.com/SkaikruNashoba
- * 
+ *
  *  Version
  *  1.0.4
  */
