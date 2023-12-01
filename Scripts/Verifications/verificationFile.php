@@ -101,7 +101,10 @@ function exploreFile($filePath, $argTwo, $argThree) {
 			$matched = false;
 
 			/* Skip a part of code */
-			if (preg_match("/^\s*<style\s*.*>$|^\s*\/\*(\*?)\s*(.*[^\*\/])?$/U", $trimmedLine)) {
+			if (
+				preg_match("/^\s*<style\s*.*>$|^\s*\/\*(\*?)\s*(.*[^\*\/])?$/U", $trimmedLine)
+				|| (preg_match("/^\s*<>$/U", $trimmedLine) && preg_match("/^\s*return\s*\($/U", $fileContents[$lineNumber - 1]))
+			) {
 				if (isset($argThree) && $argThree !== "-noExplain") {
 					echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 					echo "\033[32m" . ($lineNumber + 1) . " | Start skipping " . trim($trimmedLine) . "\n";
@@ -111,7 +114,15 @@ function exploreFile($filePath, $argTwo, $argThree) {
 				$blockOfCodeSkipped = true;
 				continue;
 			};
-			if ($blockOfCodeSkipped && (strpos($trimmedLine, '</style>') || preg_match("/^\s*.*\*\/$/U", $trimmedLine))) {
+			if (
+				$blockOfCodeSkipped
+				&&
+				(
+					(strpos($trimmedLine, '</style>') || preg_match("/^\s*.*\*\/$/U", $trimmedLine))
+					||
+					(preg_match("/^\s*<\/>$/U", $trimmedLine) && preg_match("/^\s*<\/.*>$/U", $fileContents[$lineNumber - 1]))
+				)
+			) {
 				if (isset($argThree) && $argThree !== "-noExplain") {
 					echo "\033[32m" . ($lineNumber + 1) . " | End skipping " . trim($trimmedLine) . "\n";
 					echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
@@ -292,21 +303,14 @@ function exploreFile($filePath, $argTwo, $argThree) {
 					if (isset($argTwo) && $argTwo !== '-noEdit') {
 						continue 2;
 					};
-				case preg_match("/^\n*$/U", $trimmedLine) && preg_match("/^\n*$/U", $fileContents[$lineNumber - 1]) && preg_match("/^\n*$/U", $fileContents[$lineNumber - 2]):
-					if (isset($argThree) && $argThree !== "-noExplain") {
-						echo ("\033[35m" . $lineNumber + 1 . " | (carriage return) | 17\033[0m\n");
-					};
-					if (isset($argTwo) && $argTwo !== '-noEdit') {
-						continue 2;
-					};
-				case preg_match("/^\n*$/U", $trimmedLine) && preg_match("/^\n*$/U", $fileContents[$lineNumber - 1]) && preg_match("/^.*$/U", $fileContents[$lineNumber - 2]):
+				case preg_match("/^\n*$/U", $trimmedLine) && preg_match("/^\n*$/U", $fileContents[$lineNumber - 1]) && preg_match("/^.*$|^\n*$/U", $fileContents[$lineNumber - 2]):
 					if (isset($argThree) && $argThree !== "-noExplain") {
 						echo ("\033[35m" . $lineNumber + 1 . " | (carriage return) | 18\033[0m\n");
 					};
 					if (isset($argTwo) && $argTwo !== '-noEdit') {
 						continue 2;
 					};
-					/* special case when a line start by "//" or "/*" */
+					/* special case when a line or multiple line have a comment */
 				case preg_match("/^\s*\/\/\s*(.*)?$|^\s*\/\*\s*(.*)\*\//U", $trimmedLine):
 					if (isset($argThree) && $argThree !== "-noExplain") {
 						echo ("\033[32m" . $lineNumber + 1 . " | (auto skip) | 19\033[0m\n");
@@ -325,8 +329,8 @@ function exploreFile($filePath, $argTwo, $argThree) {
 			};
 
 			if (
-				!preg_match("/\{[^\}]+\}$|':$|\{$|;$|}}$|return \($|\),$|{`[\w\W\d]*`}$|^\s*\}\)|^\s*[\w]*=({\"?.*\"?})$|^(?!(\/))(.*\))$/U", $trimmedLine)
-				&& preg_match("/'}$|return?[\w\W]+$|break$|exit$|(from|require) ['\"]?[\w\W]*['\"]?$|(export) [\w\W]*$/U", $trimmedLine)
+				!preg_match("/\{[^\}]+\}$|':$|\{$|;$|}}$|return \($|\),$|{`[\w\W\d]*`}$|^\s*\}\)|^\s*[\w]*=({\"?.*\"?})$/U", $trimmedLine)
+				&& preg_match("/'}$|return?[\w\W]+$|break$|exit$|(from|require) ['\"]?[\w\W]*['\"]?$|(export) [\w\W]*$|^\s*(.*\))$/U", $trimmedLine)
 			) {
 				if (isset($argTwo) && $argTwo === '-noEdit') {
 					if (isset($argThree) && $argThree !== "-noExplain") {
