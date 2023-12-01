@@ -140,18 +140,26 @@ function exploreFile($filePath, $argTwo, $argThree) {
 			/* End skip a part of code */
 
 			switch (true) {
-				case preg_match("/^\s*\)$/U", $trimmedLine) && preg_match("/^\s*}\)/U", $fileContents[$lineNumber - 1]):
+				case preg_match("/^\s*\)$/U", $trimmedLine) && preg_match("/^\s*}\)$/U", $fileContents[$lineNumber - 1]):
 					if (isset($argThree) && $argThree !== "-noExplain") {
-						echo ("\033[32m" . $lineNumber + 1 . " | (passed) | 1\033[0m\n");
+						echo ("\033[31m" . $lineNumber + 1 . " | (;) | 1\033[0m\n");
 					};
-					$matched = true;
-					break;
+					if (isset($argTwo) && $argTwo !== '-noEdit') {
+						$trimmedLine .= ';';
+					};
+					$newContents .= $trimmedLine . PHP_EOL;
+					$lineNumber++;
+					continue 2;
 				case preg_match("/^\s*}, [\w\W]*?\)$/U", $trimmedLine) && preg_match("/^\s*\)$/U", $fileContents[$lineNumber - 1]):
 					if (isset($argThree) && $argThree !== "-noExplain") {
-						echo ("\033[32m" . $lineNumber + 1 . " | (passed) | 2\033[0m\n");
+						echo ("\033[31m" . $lineNumber + 1 . " | (;) | 2\033[0m\n");
 					};
-					$matched = true;
-					break;
+					if (isset($argTwo) && $argTwo !== '-noEdit') {
+						$trimmedLine .= ';';
+					};
+					$newContents .= $trimmedLine . PHP_EOL;
+					$lineNumber++;
+					continue 2;
 				case preg_match("/^\s*\".*?\"\}/U", $trimmedLine) && preg_match("/^\s*\".*?\"\s*?\+$/U", $fileContents[$lineNumber - 1]):
 					if (isset($argThree) && $argThree !== "-noExplain") {
 						echo ("\033[32m" . $lineNumber + 1 . " | (passed) | 3\033[0m\n");
