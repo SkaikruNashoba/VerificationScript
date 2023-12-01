@@ -23,18 +23,18 @@ if (($argv[1] === '-h' || $argv[1] === '-help' || $argv[1] === '?')) {
 	$argTwo = $argv[2];
 	$argThree = $argv[3];
 	switch (true) {
-		case (isset($argTwo) && !($argTwo == '-noEdit' || $argTwo === '-')):
+		case (isset($argTwo) && !($argTwo === '-noEdit' || $argTwo === '-')):
 			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 			echo "\033[31mPlease indicate a valid command for 1st option.\033[0m\n";
 			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 			exit;
-		case (isset($argThree) && !($argThree == '-noExplain' || $argThree === '-')):
+		case (isset($argThree) && !($argThree === '-noExplain' || $argThree === '-')):
 			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 			echo "\033[31mPlease indicate a valid command for 2nd option.\033[0m\n";
 			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 			exit;
-	}
-}
+	};
+};
 
 if (isset($argThree) && $argThree !== "-noExplain") {
 	echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
@@ -92,6 +92,7 @@ function exploreFile($filePath, $argTwo, $argThree) {
 		};
 
 		if (isset($argThree) && $argThree !== "-noExplain") {
+			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 			echo "(LINE) | (MISS) | (CASE)\n";
 			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 		};
@@ -102,7 +103,7 @@ function exploreFile($filePath, $argTwo, $argThree) {
 
 			/* Skip a part of code */
 			if (
-				preg_match("/^\s*<style\s*.*>$|^\s*\/\*(\*?)\s*(.*[^\*\/])?$/U", $trimmedLine)
+				preg_match("/^\s*<style\s*.*>$|^\s*\/\*(\*?)\s*(.*[^\*\/])?$|^\s*if\s*\(?$/U", $trimmedLine)
 				|| (preg_match("/^\s*<>$/U", $trimmedLine) && preg_match("/^\s*return\s*\($/U", $fileContents[$lineNumber - 1]))
 			) {
 				if (isset($argThree) && $argThree !== "-noExplain") {
@@ -118,9 +119,10 @@ function exploreFile($filePath, $argTwo, $argThree) {
 				$blockOfCodeSkipped
 				&&
 				(
-					(strpos($trimmedLine, '</style>') || preg_match("/^\s*.*\*\/$/U", $trimmedLine))
-					||
-					(preg_match("/^\s*<\/>$/U", $trimmedLine) && preg_match("/^\s*<\/.*>$/U", $fileContents[$lineNumber - 1]))
+					(preg_match("/^\s*.*\*\/$/U", $trimmedLine)) ||
+					(preg_match("/^\s*<\/>$/U", $trimmedLine) && preg_match("/^\s*<\/.*>$/U", $fileContents[$lineNumber - 1])) ||
+					(preg_match("/^\s*\)\s*\{$/U", $trimmedLine)) ||
+					(preg_match("/^\s*<\/style>$/U", $trimmedLine))
 				)
 			) {
 				if (isset($argThree) && $argThree !== "-noExplain") {
@@ -150,7 +152,7 @@ function exploreFile($filePath, $argTwo, $argThree) {
 					$newContents .= $trimmedLine . PHP_EOL;
 					$lineNumber++;
 					continue 2;
-				case preg_match("/^\s*}, [\w\W]*?\)$/U", $trimmedLine) && preg_match("/^\s*\)$/U", $fileContents[$lineNumber - 1]):
+				case preg_match("/^\s*}, .*?\)$/U", $trimmedLine) && preg_match("/^\s*\)$/U", $fileContents[$lineNumber - 1]):
 					if (isset($argThree) && $argThree !== "-noExplain") {
 						echo ("\033[31m" . $lineNumber + 1 . " | (;) | 2\033[0m\n");
 					};
@@ -172,7 +174,7 @@ function exploreFile($filePath, $argTwo, $argThree) {
 					};
 					$matched = false;
 					break;
-				case preg_match("/^\s*[\w\W]*:\s*\".*\"$/U", $trimmedLine, $matches) && preg_match("/^\s*[\w\W]*:\s*\".*\",$/U", $fileContents[$lineNumber - 1]):
+				case preg_match("/^\s*.*:\s*\".*\"$/U", $trimmedLine, $matches) && preg_match("/^\s*.*:\s*\".*\",$/U", $fileContents[$lineNumber - 1]):
 					if (isset($argThree) && $argThree !== "-noExplain") {
 						echo ("\033[1;31m" . $lineNumber + 1 . " | (,) | 5\033[0m\n");
 					};
@@ -184,7 +186,8 @@ function exploreFile($filePath, $argTwo, $argThree) {
 					$lineNumber++;
 					$matched = false;
 					continue 2;
-				case preg_match("/^\s*\}$/U", $trimmedLine) && preg_match("/^\s*[\w\W]*:\s*\".*\",?$/U", $fileContents[$lineNumber - 1]):
+				case preg_match("/^\s*\}$/U", $trimmedLine) &&
+					preg_match("/^\s*.*:\s*\".*\",?$/U", $fileContents[$lineNumber - 1]):
 					if (isset($argThree) && $argThree !== "-noExplain") {
 						echo ("\033[1;31m" . $lineNumber + 1 . " | (,) | 6\033[0m\n");
 					};
@@ -318,6 +321,7 @@ function exploreFile($filePath, $argTwo, $argThree) {
 					if (isset($argTwo) && $argTwo !== '-noEdit') {
 						continue 2;
 					};
+
 					/* special case when a line or multiple line have a comment */
 				case preg_match("/^\s*\/\/\s*(.*)?$|^\s*\/\*\s*(.*)\*\//U", $trimmedLine):
 					if (isset($argThree) && $argThree !== "-noExplain") {
@@ -337,8 +341,8 @@ function exploreFile($filePath, $argTwo, $argThree) {
 			};
 
 			if (
-				!preg_match("/\{[^\}]+\}$|':$|\{$|;$|}}$|return \($|\),$|{`[\w\W\d]*`}$|^\s*\}\)|^\s*[\w]*=({\"?.*\"?})$/U", $trimmedLine)
-				&& preg_match("/'}$|return?[\w\W]+$|break$|exit$|(from|require) ['\"]?[\w\W]*['\"]?$|(export) [\w\W]*$|^\s*(.*\))$/U", $trimmedLine)
+				!preg_match("/\{[^\}]+\}$|':$|:$|\{$|;$|}}$|return \($|\),$|{`[\w\W\d]*`}$|^\s*\}\)|^\s*[\w]*=({\"?.*\"?})$/U", $trimmedLine)
+				&& preg_match("/'}$|return\s*.*?$|break$|exit$|(from|require) ['\"]?.*['\"]?$|(export) .*$|^\s*(.*\))$/U", $trimmedLine)
 			) {
 				if (isset($argTwo) && $argTwo === '-noEdit') {
 					if (isset($argThree) && $argThree !== "-noExplain") {
@@ -368,6 +372,7 @@ function exploreFile($filePath, $argTwo, $argThree) {
 		};
 		file_put_contents($filePath, $newContents);
 	} else {
+		echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 		echo "\033[31mX\033[0m \033[93mFile\033[0m $filePath \033[34misn't a js or php file\033[0m\n";
 	};
 };
@@ -386,6 +391,7 @@ if (isset($argTwo) && $argTwo !== '-noEdit') {
 	echo "\033[31mPlease check all modified files in case of a potential error during replacement\033[0m\n";
 	echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 };
+
 /**
  *  Creator:
  *  https://github.com/SkaikruNashoba
