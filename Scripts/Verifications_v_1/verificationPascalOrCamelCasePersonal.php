@@ -68,7 +68,6 @@ function exploreFile($path) {
 		"webpack.mix.js",
 		"gulpfile.js",
 		"Gruntfile.js",
-		"App.test.js",
 		"README.md",
 		"package.json",
 		"package-lock.json",

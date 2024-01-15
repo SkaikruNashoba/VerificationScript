@@ -7,7 +7,7 @@ Please ensure that you have PHP installed and configured on your machine to run 
 (All scripts work with php or js file)
 
 (If you don't want `[option]` you can replace `[option]` by a "-")
-(If you want help for a script you can use "?" or "-h" or "-help" instead of `[path]`)
+(If you want help for a script you can "-h" or "-help" instead of `[path]`)
 
 ### verificationLine.php
 - Run the command `php verificationLine.php [path] [option] [option]` in your terminal.

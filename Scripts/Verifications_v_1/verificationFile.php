@@ -1,6 +1,42 @@
 <?php
 
-if (($argv[1] === '-h' || $argv[1] === '-help' || $argv[1] === '?')) {
+// function Gestion_Params(array $givenSimpleOptions, array $givenValuedOptions) {
+// 	$simpleOption = array_fill_keys($givenSimpleOptions, false);
+// 	$valuedOption = array_fill_keys($givenValuedOptions, false);
+// 	$values = [];
+
+// 	global $argc, $argv;
+// 	for ($i = 1; $i < $argc; $i++) {
+
+// 		if ($argv[$i][0] != "-") {
+// 			$values[] = $argv[$i];
+// 		} else {
+// 			if (isset($simpleOption[$argv[$i]])) {
+// 				$simpleOption[$argv[$i]] = true;
+// 			} elseif (isset($valuedOption[$argv[$i]])) {
+// 				if (isset($argv[$i + 1])) {
+// 					if ($argv[$i + 1][0] != "-") {
+// 						$valuedOption[$argv[$i]] = $argv[$i + 1];
+// 					} else {
+// 						echo $argv[$i] . " expect an argument, but " . $argv[$i + 1] . " is an option.\n";
+// 					}
+// 				} else {
+// 					echo $argv[$i] . " needs an additionnal parameter, it cannot be put at the end.\n";
+// 				}
+// 			} else {
+// 				echo $argv[$i] . " is not a valid option.\n";
+// 			}
+// 		}
+// 	}
+
+// 	return [
+// 		"simpleOption" => $simpleOption,
+// 		"valuedOption" => $valuedOption,
+// 		"values" => $values,
+// 	];
+// }
+
+if (($argv[1] === '-h' || $argv[1] === '-help')) {
 	echo ("\n\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n");
 	echo ("\033[32mGlobal explanation of verificationFile.php\033[0m\n\n");
 	echo ("This script is used to check if all semicolons or comma are present in the files of a project.\n");
@@ -23,12 +59,12 @@ if (($argv[1] === '-h' || $argv[1] === '-help' || $argv[1] === '?')) {
 	$argTwo = $argv[2];
 	$argThree = $argv[3];
 	switch (true) {
-		case (isset($argTwo) && !($argTwo === '-noEdit' || $argTwo === '-')):
+		case ((isset($argTwo) && !($argTwo === '-noEdit' || $argTwo === '-')) || !isset($argTwo)):
 			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 			echo "\033[31mPlease indicate a valid command for 1st option.\033[0m\n";
 			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 			exit;
-		case (isset($argThree) && !($argThree === '-noExplain' || $argThree === '-')):
+		case ((isset($argThree) && !($argThree === '-noExplain' || $argThree === '-')) || !isset($argThree)):
 			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 			echo "\033[31mPlease indicate a valid command for 2nd option.\033[0m\n";
 			echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
@@ -103,8 +139,8 @@ function exploreFile($filePath, $argTwo, $argThree) {
 
 			/* Start skip a part of code */
 			if (
-				preg_match("/^\s*<style\s*.*>$|^\s*\/\*(\*?)\s*(.*[^\*\/])?$|^\s*if\s*\(?$/U", $trimmedLine)
-				|| (preg_match("/^\s*<>$/U", $trimmedLine) && preg_match("/^\s*return\s*\($/U", $fileContents[$lineNumber - 1]))
+				preg_match("/^\s*<style\s*.*>$|^\s*\/\*(\*?)\s*(.*[^\*\/])?$|^\s*if\s*\(?$/U", $trimmedLine) ||
+				(preg_match("/^\s*<>$/U", $trimmedLine) && preg_match("/^\s*return\s*\($/U", $fileContents[$lineNumber - 1]))
 			) {
 				if (isset($argThree) && $argThree !== "-noExplain") {
 					echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
@@ -379,9 +415,10 @@ function exploreFile($filePath, $argTwo, $argThree) {
 
 $startTime = microtime(true);
 explorePath($path, $argTwo, $argThree);
-
 $endTime = microtime(true);
+
 $executionTime = round($endTime - $startTime, 2);
+
 echo "\033[33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n";
 if (isset($argThree) && $argThree !== "-noExplain") {
 	echo "\033[32mExecution time: $executionTime seconds\033[0m\n";
