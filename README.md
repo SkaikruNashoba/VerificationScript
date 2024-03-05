@@ -19,6 +19,11 @@ Please ensure that you have PHP installed and configured on your machine to run 
 - Run the command `php verificationPascalOrCamelPersonal.php [path]` in your terminal.
 - Replace `[path]` with the path you want to verify.
 
+### verificationReplace.php
+- Run the command `php verificationReplace.php [path] [option]` in your terminal.
+- Replace `[path]` with the path you want to replace fetch prod by fetch local and vice-versa.
+- Replace `[option]` by "prod" or "local".
+
 ### verificationFile.php
 - Run the command `php verificationSelemicon.php [path] [option] [option]` in your terminal.
 - Replace `[path]` with the path you want to verify.
