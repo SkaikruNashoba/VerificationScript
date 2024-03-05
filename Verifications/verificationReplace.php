@@ -75,7 +75,7 @@ function exploreFile($filePath, $argTwo) {
         };
 
         foreach ($fileContents as $line) {
-            $trimmedLine = trim($line);
+            $trimmedLine = rtrim($line);
             $lineModified = false;
             $lineCount++;
             switch ((string) $argTwo) {
