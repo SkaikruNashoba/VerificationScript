@@ -39,7 +39,7 @@ Please ensure that you have PHP installed and configured on your machine to run 
 
 ## Developer
 
-Hello Developer, if you're planning to create a new script, please write it in English and adhere to the Lower Camel Case (LCC) naming convention. You can refer to `Base.php` for guidance.
+Hello Developer, if you're planning to create a new script, please write it in English and adhere to the Lower Camel Case (LCC) naming convention.
 
 Please indicate your github in a comment at the bottom of each file you create.
 
